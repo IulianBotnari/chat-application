@@ -1,13 +1,24 @@
 import style from './MainPage.module.css'
+import { useNavigate } from 'react-router'
 
 
 export default function MainPage() {
+
+    const navigate = useNavigate()
+
+    function handleSignIn() {
+        navigate('/signin')
+    }
+    function handleLogin() {
+        navigate('/login')
+    }
+
     return (
         <>
             <div className={style.button_container}>
-                <button className='btn btn-secondary' type="submit">LogOut</button>
-                <button className='btn btn-secondary' type="submit">SignIn</button>
-                <button className='btn btn-secondary' type="submit">LogIn</button>
+                <button className='btn btn-secondary' type="button">LogOut</button>
+                <button className='btn btn-secondary' type="button" onClick={handleSignIn}>SignIn</button>
+                <button className='btn btn-secondary' type="button" onClick={handleLogin}>LogIn</button>
             </div>
             <div className={style.container}>
 
