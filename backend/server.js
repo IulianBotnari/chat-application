@@ -7,6 +7,7 @@ server.use(cors())
 dotenv.config();
 const host = process.env.HOST
 const port = process.env.PORT
+const connectdb = require('./db/DbConnection')
 
 
 server.listen(port, () => {
