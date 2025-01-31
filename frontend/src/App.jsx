@@ -1,15 +1,23 @@
 
 import './App.css'
 import LogInPage from './pages/LogIn/LogInPage.jsx'
-import SignUpPage from './pages/SignUp/SignUpPage.jsx'
-import HomePage from './pages/HomePage/HomePage.jsx'
-import { BrouserRouter, Routes, Router } from 'react-router';
+import SignInPage from './pages/SignIn/SignInPage.jsx'
+import HomePage from './pages/Main/MainPage.jsx'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useGlobalContext } from './Contexts/GlobalContext/Context.jsx';
 
 function App() {
 
 
   return (
     <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LogInPage />} />
+          <Route path="/signup" element={<SignInPage />} />
+        </Routes>
+      </BrowserRouter>
 
     </>
   )

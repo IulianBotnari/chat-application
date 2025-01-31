@@ -1,6 +1,6 @@
 
 
-export default function LogInPage() {
+export default function SignInPage() {
     return (
         <>
 
