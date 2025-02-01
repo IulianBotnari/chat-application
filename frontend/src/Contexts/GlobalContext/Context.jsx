@@ -6,6 +6,9 @@ const context = createContext()
 
 export function GlobalContext({ children }) {
     const [token, setToken] = useState()
+    // console.log(token);
+
+    setToken(localStorage.getItem("token"))
 
     const values = {
         setToken

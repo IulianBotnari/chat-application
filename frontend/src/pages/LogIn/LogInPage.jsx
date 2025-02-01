@@ -23,7 +23,7 @@ export default function LogInPage() {
 
             const data = await response.json();
             console.log("Login successful:", data);
-            setToken(data)
+            localStorage.setItem("token", data)
         } catch (error) {
             console.log("Autentication failed", error)
         }
