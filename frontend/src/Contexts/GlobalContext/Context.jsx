@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { createContext, useContext } from "react";
 
 const context = createContext()
 
 
 export function GlobalContext({ children }) {
+    const [token, setToken] = useState()
 
-    const values = {}
+    const values = {
+        setToken
+    }
     return (
         <context.Provider value={values}>
             {children}

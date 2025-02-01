@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const server = express();
 const dotenv = require('dotenv');
+dotenv.config();
 const host = process.env.HOST
 const port = process.env.PORT
 const passport = require('passport')
@@ -11,14 +12,14 @@ const jwt = require('jsonwebtoken')
 const expressSession = require('express-session')
 const connectdb = require('./db/DbConnection')
 const router = require("./Router/Router")
+const secret_key = process.env.SECRET_KEY
 server.use(express.json())
 server.use(cors())
-dotenv.config();
 
 passport.use(new LocalStrategy(
     async (username, password, done) => {
         try {
-            connectdb.query('SELECT * FROM users WHERE username = =', [username], async (err, result) => {
+            connectdb.query('SELECT * FROM users WHERE username = ?', [username], async (err, result) => {
                 if (err) throw err
 
                 const user = result[0]
@@ -63,21 +64,22 @@ const authenticateJWT = (req, res, next) => {
 }
 
 server.post('/register', async (req, res) => {
-    const { name, surname, username, password, email } = req.body
+    const { name, surname, username, password, email, profile_pic } = req.body
     try {
-        connectdb.query('SELECT * FORM users WHERE username = ?', [username], (err, result) => {
+        connectdb.query('SELECT * FROM users WHERE username = ?', [username], (err, result) => {
             if (err) throw err
             if (result.length > 0) return res.status(400).json({ message: 'Username già esistente' })
         })
 
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        connectdb.query('INSERT INTO users (name, surname, username, password, email) VALUES (?,?,?,?,?)', [name, surname, username, password, email], (err, result) => {
+        connectdb.query('INSERT INTO users (name, surname, username, password, email, profile_pic) VALUES (?,?,?,?,?,?)', [name, surname, username, hashedPassword, email, profile_pic], (err, result) => {
             if (err) {
                 throw err
 
             } else {
-                res.json({ message: 'User successifully inserted' })
+
+                console.log(res.json({ message: 'User successifully inserted' }))
             }
 
         })
