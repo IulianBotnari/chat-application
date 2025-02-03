@@ -1,12 +1,13 @@
 import style from './Login.module.css'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useGlobalContext } from '../../Contexts/GlobalContext/Context'
 
 export default function LogInPage() {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    const { setToken } = useGlobalContext()
+
+    const { setLogged } = useGlobalContext()
 
     async function handleLogin(e) {
         e.preventDefault()
@@ -19,15 +20,22 @@ export default function LogInPage() {
 
             if (!response.ok) {
                 throw new Error(`Login failed! Status: ${response.status}`);
+            } else {
+
+                const data = await response.json();
+                console.log("Login successful:", data);
+                localStorage.setItem("token", data.token)
+                setLogged(true)
+
             }
 
-            const data = await response.json();
-            console.log("Login successful:", data);
-            localStorage.setItem("token", data)
         } catch (error) {
             console.log("Autentication failed", error)
         }
     }
+
+
+
     return (
         <div className={style.login_container}>
 

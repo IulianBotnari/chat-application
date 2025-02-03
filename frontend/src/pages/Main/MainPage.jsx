@@ -1,9 +1,10 @@
 import style from './MainPage.module.css'
 import { useNavigate } from 'react-router'
+import { useGlobalContext } from '../../Contexts/GlobalContext/Context'
 
 
 export default function MainPage() {
-
+    const { setLogged } = useGlobalContext()
     const navigate = useNavigate()
 
     function handleSignIn() {
@@ -13,10 +14,15 @@ export default function MainPage() {
         navigate('/login')
     }
 
+    function handleLogOut() {
+        localStorage.removeItem('token')
+        setLogged(false)
+    }
+
     return (
         <>
             <div className={style.button_container}>
-                <button className='btn btn-secondary' type="button">LogOut</button>
+                <button className='btn btn-secondary' type="button" onClick={handleLogOut}>LogOut</button>
                 <button className='btn btn-secondary' type="button" onClick={handleSignIn}>SignIn</button>
                 <button className='btn btn-secondary' type="button" onClick={handleLogin}>LogIn</button>
             </div>

@@ -1,17 +1,28 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import { createContext, useContext } from "react";
 
 const context = createContext()
 
 
 export function GlobalContext({ children }) {
-    const [token, setToken] = useState()
-    // console.log(token);
+    const [logged, setLogged] = useState()
 
-    setToken(localStorage.getItem("token"))
+    useEffect(() => {
+        if (localStorage.getItem('token')) {
+            setLogged(true)
+        } else {
+            setLogged(false)
+        }
+
+    }, [])
+    console.log(logged);
+
+
+    // setToken(localStorage.getItem("token"))
 
     const values = {
-        setToken
+        setLogged
     }
     return (
         <context.Provider value={values}>
