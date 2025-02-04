@@ -111,6 +111,8 @@ app.get('/messages', async (req, res) => {
         const [messages] = await connectdb.query("SELECT * FROM messages ORDER BY timestamp ASC");
         console.log("Messaggi recuperati con successo:", messages); // Log dei messaggi
         res.json(messages);
+        console.log(messages);
+
     } catch (err) {
         console.error("Errore durante il recupero dei messaggi:", err); // Log dell'errore
         res.status(500).json({ error: err.message });

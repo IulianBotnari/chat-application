@@ -22,7 +22,8 @@ export function GlobalContext({ children }) {
     // setToken(localStorage.getItem("token"))
 
     const values = {
-        setLogged
+        setLogged,
+        logged
     }
     return (
         <context.Provider value={values}>

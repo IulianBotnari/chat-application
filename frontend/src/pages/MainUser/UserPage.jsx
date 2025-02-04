@@ -11,14 +11,26 @@ export default function MainPage() {
     const { setLogged, logged } = useGlobalContext()
     const navigate = useNavigate()
     const { username } = useParams(); // Destruttura username
+    console.log(logged);
+
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
+    console.log(messages);
+
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
         // Crea la connessione socket solo una volta
         const newSocket = io('http://localhost:3000');
         setSocket(newSocket);
+
+        fetch("http://localhost:3000/messages")
+            .then(response => response.json())
+            .then(data => {
+                console.log("Messaggi caricati dal database:", data);
+                setMessages(data);
+            })
+            .catch(error => console.error("Errore nel caricamento dei messaggi:", error));
 
         // Riceve i messaggi in tempo reale
         newSocket.on("chat message", (msg) => {
@@ -31,11 +43,25 @@ export default function MainPage() {
 
     useEffect(() => {
         // Carica i messaggi dal database con Fetch
-        if (username && logged === true)
-            fetch("http://localhost:3000/messages")
-                .then(response => response.json())
-                .then(data => setMessages(data))
-                .catch(error => console.error("Errore nel caricamento:", error));
+
+        async function getMessages() {
+            if (username && logged === true) {
+
+
+                try {
+                    const response = await fetch("http://localhost:3000/messages")
+                    const data = response.json()
+
+                    console.log(data);
+
+                } catch (err) {
+                    console.log(err);
+
+                }
+            }
+
+        }
+
     }, []);
 
     const sendMessage = (e) => {
@@ -63,7 +89,7 @@ export default function MainPage() {
             <div className={style.container}>
                 <div className={style.chat_container}>
                     <h3>ChatList</h3>
-                    {messages?.map((msg, index) => (
+                    {/* {messages?.map((msg, index) => (
                         <div key={index} className={style.select_chat}>
                             <div className='d-flex align-items-center'>
                                 <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
@@ -71,7 +97,7 @@ export default function MainPage() {
                             </div>
                             <p>{msg.message}</p>
                         </div>
-                    ))}
+                    ))} */}
                 </div>
 
                 <div className={style.chat_window}>
