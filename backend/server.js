@@ -1,6 +1,9 @@
 const express = require('express');
+// const { createServer } = require('node:http')
+const Server = require('socket.io')
 const cors = require('cors');
 const server = express();
+const io = new Server(server)
 const dotenv = require('dotenv');
 dotenv.config();
 const host = process.env.HOST
@@ -13,6 +16,8 @@ const expressSession = require('express-session')
 const connectdb = require('./db/DbConnection')
 const router = require("./Router/Router")
 const secret_key = process.env.SECRET_KEY
+
+
 server.use(express.json())
 server.use(cors())
 
