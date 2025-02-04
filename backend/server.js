@@ -1,9 +1,10 @@
 const express = require('express');
-// const { createServer } = require('node:http')
-const Server = require('socket.io')
+const { createServer } = require('http')
+const { Server } = require('socket.io')
 const cors = require('cors');
-const server = express();
-// const io = new Server(server)
+const app = express();
+const httpServer = createServer(app)
+
 const dotenv = require('dotenv');
 dotenv.config();
 const host = process.env.HOST
@@ -14,17 +15,19 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const expressSession = require('express-session')
 const connectdb = require('./db/DbConnection')
-const router = require("./Router/Router")
+const router = require("./Router/Router");
 const secret_key = process.env.SECRET_KEY
 
 
-server.use(express.json())
-server.use(cors())
+app.use(express.json())
+app.use(cors())
 
-// io.on('connection', (socket) => {
-//     console.log('a user is connected')
-// })
-
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 passport.use(new LocalStrategy(
     async (username, password, done) => {
         try {
@@ -72,7 +75,7 @@ const authenticateJWT = (req, res, next) => {
     })
 }
 
-server.post('/register', async (req, res) => {
+app.post('/register', async (req, res) => {
     const { name, surname, username, password, email, profile_pic } = req.body
     try {
         connectdb.query('SELECT * FROM users WHERE username = ?', [username], (err, result) => {
@@ -99,15 +102,15 @@ server.post('/register', async (req, res) => {
 })
 
 
-server.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
+app.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
 
     const token = jwt.sign({ userId: req.user.id }, secret_key, { expiresIn: '3h' })
     res.json({ token })
 })
 
-server.use("/", router)
+app.use("/", router)
 
 
-server.listen(port, () => {
+app.listen(port, () => {
     console.log(`Server running at http://${host}:${port}`)
 })
