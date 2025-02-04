@@ -1,4 +1,4 @@
-import style from './MainPage.module.css'
+import style from './UserPage.module.css'
 import { useNavigate } from 'react-router'
 import { useGlobalContext } from '../../Contexts/GlobalContext/Context'
 
@@ -17,6 +17,7 @@ export default function MainPage() {
     function handleLogOut() {
         localStorage.removeItem('token')
         setLogged(false)
+        navigate('/home')
     }
 
     return (

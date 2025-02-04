@@ -1,6 +1,7 @@
 import style from './Login.module.css'
 import { useState, useEffect } from "react"
 import { useGlobalContext } from '../../Contexts/GlobalContext/Context'
+import { useNavigate } from 'react-router'
 
 export default function LogInPage() {
 
@@ -8,6 +9,7 @@ export default function LogInPage() {
     const [password, setPassword] = useState("")
 
     const { setLogged } = useGlobalContext()
+    const navigate = useNavigate()
 
     async function handleLogin(e) {
         e.preventDefault()
@@ -26,6 +28,7 @@ export default function LogInPage() {
                 console.log("Login successful:", data);
                 localStorage.setItem("token", data.token)
                 setLogged(true)
+                navigate(`/${username}`)
 
             }
 

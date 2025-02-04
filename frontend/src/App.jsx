@@ -2,7 +2,8 @@
 import './App.css'
 import LogInPage from './pages/LogIn/LogInPage.jsx'
 import SignInPage from './pages/SignIn/SignInPage.jsx'
-import HomePage from './pages/Main/MainPage.jsx'
+import HomePage from './pages/Main/HomePage.jsx'
+import UserPage from './pages/MainUser/UserPage.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { GlobalContext } from './Contexts/GlobalContext/Context.jsx'
 
@@ -16,7 +17,8 @@ function App() {
       <GlobalContext>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/:username" element={<UserPage />} />
             <Route path="/login" element={<LogInPage />} />
             <Route path="/signin" element={<SignInPage />} />
           </Routes>

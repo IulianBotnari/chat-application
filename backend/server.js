@@ -3,7 +3,7 @@ const express = require('express');
 const Server = require('socket.io')
 const cors = require('cors');
 const server = express();
-const io = new Server(server)
+// const io = new Server(server)
 const dotenv = require('dotenv');
 dotenv.config();
 const host = process.env.HOST
@@ -20,6 +20,10 @@ const secret_key = process.env.SECRET_KEY
 
 server.use(express.json())
 server.use(cors())
+
+// io.on('connection', (socket) => {
+//     console.log('a user is connected')
+// })
 
 passport.use(new LocalStrategy(
     async (username, password, done) => {
