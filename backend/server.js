@@ -31,24 +31,24 @@ const io = new Server(httpServer, {
 passport.use(new LocalStrategy(
     async (username, password, done) => {
         try {
-            connectdb.query('SELECT * FROM users WHERE username = ?', [username], async (err, result) => {
-                if (err) throw err
-
-                const user = result[0]
-                if (!user) return done(null, false, { message: 'User not found' })
+            const [rows] = await connectdb.query('SELECT * FROM users WHERE username = ?', [username])
 
 
-                const isMatch = await bcrypt.compare(password, user.password)
-                if (!isMatch) return done(null, false, { message: 'Wrong password' })
+            const user = rows[0]
+            if (!user) return done(null, false, { message: 'User not found' })
 
-                return done(null, user)
 
-            })
+            const isMatch = await bcrypt.compare(password, user.password)
+            if (!isMatch) return done(null, false, { message: 'Wrong password' })
+
+            return done(null, user)
+
         } catch (err) {
             return done(err)
         }
-    }
-))
+    }))
+
+
 
 
 passport.serializeUser((user, done) => done(null, user.id))
@@ -76,30 +76,25 @@ const authenticateJWT = (req, res, next) => {
 }
 
 app.post('/register', async (req, res) => {
-    const { name, surname, username, password, email, profile_pic } = req.body
+    const { name, surname, username, password, email, profile_pic } = req.body;
     try {
-        connectdb.query('SELECT * FROM users WHERE username = ?', [username], (err, result) => {
-            if (err) throw err
-            if (result.length > 0) return res.status(400).json({ message: 'Username già esistente' })
-        })
+        const [existingUsers] = await connectdb.query('SELECT * FROM users WHERE username = ?', [username]) || [[]];
+        if (existingUsers.length > 0) {
+            return res.status(400).json({ message: 'Username già esistente' });
+        }
 
-        const hashedPassword = await bcrypt.hash(password, 10)
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await connectdb.query(
+            'INSERT INTO users (name, surname, username, password, email, profile_pic) VALUES (?,?,?,?,?,?)',
+            [name, surname, username, hashedPassword, email, profile_pic]
+        );
 
-        connectdb.query('INSERT INTO users (name, surname, username, password, email, profile_pic) VALUES (?,?,?,?,?,?)', [name, surname, username, hashedPassword, email, profile_pic], (err, result) => {
-            if (err) {
-                throw err
-
-            } else {
-
-                console.log(res.json({ message: 'User successifully inserted' }))
-            }
-
-        })
-
+        res.json({ message: 'User successfully inserted' });
     } catch (err) {
-        res.status(500).json({ message: 'Registration failed' })
+        console.error("Errore di registrazione:", err);
+        res.status(500).json({ message: 'Registration failed', error: err.message });
     }
-})
+});
 
 
 app.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
@@ -110,7 +105,39 @@ app.post('/login', passport.authenticate('local', { session: false }), (req, res
 
 app.use("/", router)
 
+app.get('/messages', async (req, res) => {
+    try {
+        console.log("📡 Richiesta ricevuta: GET /messages"); // Log della richiesta
+        const [messages] = await connectdb.query("SELECT * FROM messages ORDER BY timestamp ASC");
+        console.log("Messaggi recuperati con successo:", messages); // Log dei messaggi
+        res.json(messages);
+    } catch (err) {
+        console.error("Errore durante il recupero dei messaggi:", err); // Log dell'errore
+        res.status(500).json({ error: err.message });
+    }
+});
 
-app.listen(port, () => {
-    console.log(`Server running at http://${host}:${port}`)
+
+// Socket.IO per la comunicazione in tempo reale
+io.on('connection', (socket) => {
+    console.log('Un utente si è connesso');
+
+    socket.on('chat message', async (data) => {
+        const { username, message } = data;
+
+        try {
+            await connectdb.query("INSERT INTO messages (username, message) VALUES (?, ?)", [username, message]);
+            io.emit('chat message', { username, message, timestamp: new Date() });
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Un utente si è disconnesso');
+    });
+});
+
+httpServer.listen(port, () => {
+    console.log(`Server running at ${host}:${port}`)
 })

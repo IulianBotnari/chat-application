@@ -1,15 +1,24 @@
-const connectdb = require('../db/DbConnection')
+const connectdb = require('../db/DbConnection');
 
 
 
-const getUser = ("/users", (req, res) => {
 
-    connectdb.query("SELECT * FROM users", (error, results) => {
-        if (error) throw error
-        res.json(results)
-    })
 
-})
+
+async function getUser(req, res) {
+    try {
+        const [users] = await connectdb.query("SELECT * FROM users");
+
+        if (users.length === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json(users);
+    } catch (err) {
+        console.error("Errore nel recupero utente:", err);
+        res.status(500).json({ error: err.message });
+    }
+}
 
 
 

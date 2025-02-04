@@ -17,7 +17,7 @@ function App() {
       <GlobalContext>
         <BrowserRouter>
           <Routes>
-            <Route path="/home" element={<HomePage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/:username" element={<UserPage />} />
             <Route path="/login" element={<LogInPage />} />
             <Route path="/signin" element={<SignInPage />} />
