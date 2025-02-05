@@ -34,7 +34,7 @@ async function getChatList(req, res) {
 
         // Recupera il contenuto delle tabelle
         const tableDataPromises = chatList.map(async (table) => {
-            const [tableData] = await connectdb.query(`SELECT * FROM ??`, [table.TABLE_NAME]);
+            const [tableData] = await connectdb.query(`SELECT * FROM ?? ORDER BY id DESC LIMIT 1`, [table.TABLE_NAME]);
             return { table_name: table.TABLE_NAME, data: tableData };
         });
 
