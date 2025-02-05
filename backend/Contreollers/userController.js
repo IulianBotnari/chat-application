@@ -32,7 +32,17 @@ async function getChatList(req, res) {
             return res.status(404).json({ message: "Chat not found" });
         }
 
-        res.json(chatList)
+        // Recupera il contenuto delle tabelle
+        const tableDataPromises = chatList.map(async (table) => {
+            const [tableData] = await connectdb.query(`SELECT * FROM ??`, [table.TABLE_NAME]);
+            return { table_name: table.TABLE_NAME, data: tableData };
+        });
+
+        // Risolvi tutte le promesse per ottenere i dati da tutte le tabelle
+        const tableData = await Promise.all(tableDataPromises);
+
+        // Risponde con i dati delle tabelle
+        res.json(tableData);
     }
 
     catch (err) {
