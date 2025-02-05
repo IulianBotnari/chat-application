@@ -16,6 +16,7 @@ export default function MainPage() {
     const [socket, setSocket] = useState(null)
     const [chatList, setChatList] = useState([])
     const [tableName, setTableName] = useState([])
+    const [usersList, setUsersList] = useState([])
     console.log(tableName);
 
 
@@ -102,6 +103,22 @@ export default function MainPage() {
     }
 
 
+    useEffect(() => {
+        async function getUsers() {
+            try {
+                const response = await fetch(`http://localhost:3000/users`)
+                const data = await response.json()
+                setUsersList(data)
+            } catch (err) {
+                console.log(err);
+
+            }
+        }
+
+        getUsers()
+    }, [])
+
+
     return (
         <>
             <div className={style.button_container}>
@@ -158,6 +175,13 @@ export default function MainPage() {
                             <button className='btn btn-secondary' type="submit">Search</button>
                         </form>
                     </div>
+                    {usersList?.map((user, index) => (
+                        <div key={index}>
+                            <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
+                            <h5>{user.username}</h5>
+
+                        </div>
+                    ))}
                 </div>
             </div>
         </>
