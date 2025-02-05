@@ -52,6 +52,23 @@ async function getChatList(req, res) {
     }
 }
 
+async function createChat(req, res) {
+    const { tableName } = req.query
+    try {
+        const query = (`
+            CREATE TABLE ?? (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(255) NOT NULL,
+                message TEXT NOT NULL,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )`);
+        await connectdb.query(query, [tableName])
+        res.status(201).json({ message: "Chat creata con successo" })
+    } catch (err) {
+        console.error(`Errore nella creazione della chat`, err)
+    }
+}
+
 
 
 
@@ -59,6 +76,7 @@ async function getChatList(req, res) {
 
 module.exports = {
     getUser,
-    getChatList
+    getChatList,
+    createChat
 }
 

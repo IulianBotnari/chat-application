@@ -111,11 +111,9 @@ app.get('/messages', async (req, res) => {
 
 
     try {
-        console.log("📡 Richiesta ricevuta: GET /messages"); // Log della richiesta
+
         const [messages] = await connectdb.query(`SELECT * FROM ${tablename} ORDER BY timestamp ASC`);
-        console.log("Messaggi recuperati con successo:", messages); // Log dei messaggi
         res.json(messages);
-        console.log(messages);
 
     } catch (err) {
         console.error("Errore durante il recupero dei messaggi:", err); // Log dell'errore
