@@ -11,14 +11,18 @@ export default function MainPage() {
     const { setLogged, logged } = useGlobalContext()
     const navigate = useNavigate()
     const { username } = useParams()
-    console.log(logged);
     const frankie = "mary"
-
     const [message, setMessage] = useState("");
-    const [messages, setMessages] = useState([]);
-    console.log(messages);
+    const [messages, setMessages] = useState([])
+    const [socket, setSocket] = useState(null)
+    const [chatList, setChatList] = useState([])
+    const [dataChatList, setDataChatList] = useState([])
+    console.log(chatList);
 
-    const [socket, setSocket] = useState(null);
+
+
+
+    // all call and logic por chatWindow
 
     useEffect(() => {
         if (!username || !logged) return
@@ -73,6 +77,25 @@ export default function MainPage() {
         navigate('/home');
     }
 
+    // all call and logic for chatList
+
+    useEffect(() => {
+        async function getChatList() {
+            try {
+                const response = await fetch(`http://localhost:3000/chatlist?username=${username}`)
+                const data = await response.json()
+                setChatList(data)
+
+            } catch (err) {
+                console.log(err);
+
+            }
+        }
+
+        getChatList()
+    }, [])
+
+
     return (
         <>
             <div className={style.button_container}>
@@ -84,15 +107,17 @@ export default function MainPage() {
             <div className={style.container}>
                 <div className={style.chat_container}>
                     <h3>ChatList</h3>
-                    {/* {messages?.map((msg, index) => (
+                    {chatList?.map((table, index) => (
+
                         <div key={index} className={style.select_chat}>
                             <div className='d-flex align-items-center'>
                                 <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
-                                <h5>{msg.username}</h5>
+                                <h5>{table.table_name}</h5>
                             </div>
-                            <p>{msg.message}</p>
+                            <p>{table.data[0].message}</p>
                         </div>
-                    ))} */}
+                    ))}
+
                 </div>
 
                 <div className={style.chat_window}>
