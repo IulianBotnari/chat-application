@@ -106,9 +106,13 @@ app.post('/login', passport.authenticate('local', { session: false }), (req, res
 app.use("/", router)
 
 app.get('/messages', async (req, res) => {
+    const { tablename } = req.query
+    console.log(tablename);
+
+
     try {
         console.log("📡 Richiesta ricevuta: GET /messages"); // Log della richiesta
-        const [messages] = await connectdb.query("SELECT * FROM messages ORDER BY timestamp ASC");
+        const [messages] = await connectdb.query(`SELECT * FROM ${tablename} ORDER BY timestamp ASC`);
         console.log("Messaggi recuperati con successo:", messages); // Log dei messaggi
         res.json(messages);
         console.log(messages);
@@ -128,7 +132,7 @@ io.on('connection', (socket) => {
         const { username, message } = data;
 
         try {
-            await connectdb.query("INSERT INTO messages (username, message) VALUES (?, ?)", [username, message]);
+            await connectdb.query("INSERT INTO mary_frankie (username, message) VALUES (?, ?)", [username, message]);
             io.emit('chat message', { username, message, timestamp: new Date() });
         } catch (err) {
             console.error(err);

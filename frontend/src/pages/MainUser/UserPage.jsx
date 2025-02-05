@@ -10,8 +10,9 @@ import { useParams } from 'react-router'
 export default function MainPage() {
     const { setLogged, logged } = useGlobalContext()
     const navigate = useNavigate()
-    const { username } = useParams(); // Destruttura username
+    const { username } = useParams()
     console.log(logged);
+    const frankie = "mary"
 
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
@@ -20,49 +21,43 @@ export default function MainPage() {
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
-        // Crea la connessione socket solo una volta
+        if (!username || !logged) return
         const newSocket = io('http://localhost:3000');
         setSocket(newSocket);
 
-        fetch("http://localhost:3000/messages")
-            .then(response => response.json())
-            .then(data => {
-                console.log("Messaggi caricati dal database:", data);
-                setMessages(data);
-            })
-            .catch(error => console.error("Errore nel caricamento dei messaggi:", error));
+        async function getMessages() {
+            try {
+                const table1 = `${username.toLowerCase()}_${frankie.toLowerCase()}`;
+                const table2 = `${frankie.toLowerCase()}_${username.toLowerCase()}`;
 
-        // Riceve i messaggi in tempo reale
+                let response = await fetch(`http://localhost:3000/messages?tablename=${table1}`);
+                if (!response.ok) {
+                    response = await fetch(`http://localhost:3000/messages?tablename=${table2}`);
+                }
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setMessages(data);
+                    console.log("Messaggi ricevuti:", data);
+                }
+            } catch (err) {
+                console.error("Errore nel caricamento dei messaggi:", err);
+            }
+        }
+
+        getMessages()
+
         newSocket.on("chat message", (msg) => {
             setMessages((prevMessages) => [...prevMessages, msg]);
         });
 
-        // Disconnette il socket quando il componente si smonta
-        return () => newSocket.disconnect();
-    }, []);
+        return () => {
+            newSocket.disconnect();
+        };
 
-    useEffect(() => {
-        // Carica i messaggi dal database con Fetch
-
-        async function getMessages() {
-            if (username && logged === true) {
+    }, [username, logged])
 
 
-                try {
-                    const response = await fetch("http://localhost:3000/messages")
-                    const data = response.json()
-
-                    console.log(data);
-
-                } catch (err) {
-                    console.log(err);
-
-                }
-            }
-
-        }
-
-    }, []);
 
     const sendMessage = (e) => {
         e.preventDefault();

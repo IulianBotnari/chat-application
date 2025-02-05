@@ -6,6 +6,7 @@ const userController = require("../Contreollers/userController.js")
 
 
 router.get("/users", userController.getUser)
+router.get("/chatlist", userController.getChatList)
 
 
 
