@@ -11,13 +11,14 @@ export default function MainPage() {
     const { setLogged, logged } = useGlobalContext()
     const navigate = useNavigate()
     const { username } = useParams()
-    const frankie = "mary"
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([])
     const [socket, setSocket] = useState(null)
     const [chatList, setChatList] = useState([])
-    const [dataChatList, setDataChatList] = useState([])
-    console.log(chatList);
+    const [tableName, setTableName] = useState([])
+    console.log(tableName);
+
+
 
 
 
@@ -31,18 +32,17 @@ export default function MainPage() {
 
         async function getMessages() {
             try {
-                const table1 = `${username.toLowerCase()}_${frankie.toLowerCase()}`;
-                const table2 = `${frankie.toLowerCase()}_${username.toLowerCase()}`;
 
-                let response = await fetch(`http://localhost:3000/messages?tablename=${table1}`);
-                if (!response.ok) {
-                    response = await fetch(`http://localhost:3000/messages?tablename=${table2}`);
-                }
+                let response = await fetch(`http://localhost:3000/messages?tablename=${tableName}`);
+
 
                 if (response.ok) {
                     const data = await response.json();
                     setMessages(data);
                     console.log("Messaggi ricevuti:", data);
+                } else {
+                    console.log("errore nel recupero dei messaggi");
+
                 }
             } catch (err) {
                 console.error("Errore nel caricamento dei messaggi:", err);
@@ -59,7 +59,7 @@ export default function MainPage() {
             newSocket.disconnect();
         };
 
-    }, [username, logged])
+    }, [tableName])
 
 
 
@@ -96,6 +96,12 @@ export default function MainPage() {
     }, [])
 
 
+    function selectChat(inex) {
+        const index = inex
+        setTableName(chatList[index].table_name)
+    }
+
+
     return (
         <>
             <div className={style.button_container}>
@@ -109,7 +115,7 @@ export default function MainPage() {
                     <h3>ChatList</h3>
                     {chatList?.map((table, index) => (
 
-                        <div key={index} className={style.select_chat}>
+                        <div key={index} className={style.select_chat} onClick={() => selectChat(index)}>
                             <div className='d-flex align-items-center'>
                                 <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
                                 <h5>{table.table_name}</h5>
@@ -123,7 +129,7 @@ export default function MainPage() {
                 <div className={style.chat_window}>
                     <h3>Chat Window</h3>
                     <div className={style.message_container}>
-                        {messages.map((msg, index) => (
+                        {messages?.map((msg, index) => (
                             <div key={index} className={`d-flex ${username === msg.username ? "flex-row-reverse" : ""}`}>
                                 <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
                                 <h5>{msg.username}</h5>
