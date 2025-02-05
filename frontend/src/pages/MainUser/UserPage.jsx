@@ -166,7 +166,7 @@ export default function MainPage() {
                 <div className={style.user_container}>
                     <div className='d-flex align-items-center'>
                         <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
-                        <h5>Username</h5>
+                        <h5>{username}</h5>
                     </div>
 
                     <div className={style.search_user_form}>
