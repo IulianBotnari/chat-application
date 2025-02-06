@@ -24,6 +24,8 @@ export default function MainPage() {
     console.log(socket);
     console.log(logged);
     console.log(nameTable2);
+    console.log(chatList);
+
 
 
 
@@ -73,6 +75,10 @@ export default function MainPage() {
     // cambiare i nomi delle variabili
     useEffect(() => {
         if (!tableName) return
+        const verifyIfChatListContainTablename = chatList.find(element => element.table_name === tableName)
+        console.log(verifyIfChatListContainTablename);
+
+        if (!verifyIfChatListContainTablename.length === 0) return
 
         async function getMessages() {
             try {
