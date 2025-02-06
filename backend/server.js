@@ -127,10 +127,11 @@ io.on('connection', (socket) => {
     console.log('Un utente si è connesso');
 
     socket.on('chat message', async (data) => {
-        const { username, message } = data;
+        const { username, message, tableName } = data;
 
         try {
-            await connectdb.query("INSERT INTO mary_frankie (username, message) VALUES (?, ?)", [username, message]);
+            const query = `INSERT INTO \`${tableName}\` (username, message) VALUES (?, ?)`;
+            await connectdb.query(query, [username, message]);
             io.emit('chat message', { username, message, timestamp: new Date() });
         } catch (err) {
             console.error(err);

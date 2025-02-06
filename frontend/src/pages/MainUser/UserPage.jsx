@@ -20,6 +20,7 @@ export default function MainPage() {
     const [usersList, setUsersList] = useState([])
     const [nameTable1, setNameTable1] = useState(null)
     const [nameTable2, setNameTable2] = useState(null)
+    // const [tableChat, setTableChat] = useState(null)
     console.log(socket);
     console.log(logged);
     console.log(nameTable2);
@@ -101,7 +102,7 @@ export default function MainPage() {
     const sendMessage = (e) => {
         e.preventDefault()
         if (message.trim() && username?.trim() && socket) {
-            socket.emit("chat message", { username, message })
+            socket.emit("chat message", { username, message, tableName })
             setMessage("")
         }
     }
@@ -148,6 +149,7 @@ export default function MainPage() {
     // funzione per far vedere in chat window la chat selezionata, pare fatta bene.
     function selectChat(index) {
         setTableName(chatList[index].table_name)
+
     }
 
 
@@ -192,6 +194,10 @@ export default function MainPage() {
 
         createNewChat()
     }, [nameTable2])
+
+    // function setNameTableChat(params) {
+    //     setNameTableChat(params)
+    // }
 
     return (
         <>
