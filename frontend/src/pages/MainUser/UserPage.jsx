@@ -22,6 +22,8 @@ export default function MainPage() {
     const [nameTable2, setNameTable2] = useState(null)
     console.log(socket);
     console.log(logged);
+    console.log(nameTable2);
+
 
 
     // settiamo il nome della prima parte della tabella chat con lo username
@@ -179,7 +181,7 @@ export default function MainPage() {
 
         async function createNewChat() {
             try {
-                const response = await fetch(`http://localhost:3000/createchat?table=${nameTable1}_${nameTable2}`)
+                const response = await fetch(`http://localhost:3000/createchat?tableName=${nameTable1}_${nameTable2.toLowerCase()}`)
                 if (response.ok) {
                     console.log("Chat creata con successo")
                 }
