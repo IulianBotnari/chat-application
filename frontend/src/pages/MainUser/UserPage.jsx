@@ -13,7 +13,7 @@ export default function MainPage() {
     const navigate = useNavigate()
     const { username } = useParams()
     const [message, setMessage] = useState("")
-    const [messages, setMessages] = useState([])
+    const [messages, setMessages] = useState({ data: [] });
     const [socket, setSocket] = useState(null)
     const [chatList, setChatList] = useState([])
     const [tableName, setTableName] = useState(null)
@@ -25,6 +25,8 @@ export default function MainPage() {
     console.log(logged);
     console.log(nameTable2);
     console.log(chatList);
+    console.log(messages);
+
 
 
 
@@ -54,19 +56,29 @@ export default function MainPage() {
     // esegue la funzione se no non viene eseguita --- IN FUTURO DA AUTENTICARE
     // CON JWT AUTHENTICATE (la middleware esiste già)
     useEffect(() => {
-        if (!username || !logged) return
+        if (!username || !logged) return;
 
-        const newSocket = io('http://localhost:3000')
-        setSocket(newSocket)
+        const newSocket = io('http://localhost:3000');
+        setSocket(newSocket);
+
+        if (tableName) {
+            newSocket.emit('join', tableName); // JOIN ROOM
+        }
 
         newSocket.on("chat message", (msg) => {
-            setMessages((prevMessages) => [...prevMessages, msg])
-        })
+            if (msg.tableName !== tableName) return;
+            setMessages(prevMessages => ({
+                ...prevMessages,
+                data: [...prevMessages.data, msg]
+            }));
+        });
 
         return () => {
-            newSocket.disconnect()
-        }
-    }, [logged])
+            newSocket.emit('leave', tableName); // LEAVE ROOM
+            newSocket.disconnect();
+        };
+    }, [logged, tableName]);
+
 
 
 
@@ -78,14 +90,19 @@ export default function MainPage() {
         const verifyIfChatListContainTablename = chatList.find(element => element.table_name === tableName)
         console.log(verifyIfChatListContainTablename);
 
-        if (!verifyIfChatListContainTablename.length === 0) return
+        if (!verifyIfChatListContainTablename) return
 
         async function getMessages() {
             try {
                 const response = await fetch(`http://localhost:3000/messages?tablename=${tableName}`)
                 if (response.ok) {
                     const data = await response.json()
-                    setMessages(data)
+                    setMessages({
+                        tableName: tableName,
+                        data: data
+                    })
+                    console.log(data);
+
                 } else {
                     console.error("Errore nel recupero dei messaggi")
                 }
@@ -95,7 +112,7 @@ export default function MainPage() {
         }
 
         getMessages()
-    }, [tableName])
+    }, [tableName, chatList])
 
 
     // funzione per mandare il messaggio scritto nel form al endpoint sul server
@@ -230,7 +247,7 @@ export default function MainPage() {
                 <div className={style.chat_window}>
                     <h3>Chat Window</h3>
                     <div className={style.message_container}>
-                        {messages.map((msg, index) => (
+                        {messages.data?.map((msg, index) => (
                             <div key={index} className={`d-flex ${username === msg.username ? "flex-row-reverse" : ""}`}>
                                 <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
                                 <h5>{msg.username}</h5>

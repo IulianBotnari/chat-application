@@ -126,13 +126,21 @@ app.get('/messages', async (req, res) => {
 io.on('connection', (socket) => {
     console.log('Un utente si è connesso');
 
+    socket.on('join', (room) => {
+        socket.join(room);
+        console.log(`Utente unito alla stanza ${room}`);
+    });
+
+    socket.on('leave', (room) => {
+        socket.leave(room);
+        console.log(`Utente uscito dalla stanza ${room}`);
+    });
+
     socket.on('chat message', async (data) => {
         const { username, message, tableName } = data;
-
         try {
-            const query = `INSERT INTO \`${tableName}\` (username, message) VALUES (?, ?)`;
-            await connectdb.query(query, [username, message]);
-            io.emit('chat message', { username, message, timestamp: new Date() });
+            await connectdb.query(`INSERT INTO \`${tableName}\` (username, message) VALUES (?, ?)`, [username, message]);
+            io.to(tableName).emit('chat message', { username, message, timestamp: new Date(), tableName });
         } catch (err) {
             console.error(err);
         }
@@ -142,6 +150,7 @@ io.on('connection', (socket) => {
         console.log('Un utente si è disconnesso');
     });
 });
+
 
 httpServer.listen(port, () => {
     console.log(`Server running at ${host}:${port}`)
