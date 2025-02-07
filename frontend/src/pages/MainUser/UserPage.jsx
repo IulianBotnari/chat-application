@@ -1,5 +1,5 @@
 
-
+// Import dei moduli necessari
 
 import style from './UserPage.module.css'
 import { useNavigate } from 'react-router'
@@ -8,6 +8,8 @@ import io from 'socket.io-client'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
+
+// Componente principale della pagina
 export default function MainPage() {
     const { setLogged, logged } = useGlobalContext()
     const navigate = useNavigate()
@@ -20,26 +22,13 @@ export default function MainPage() {
     const [usersList, setUsersList] = useState([])
     const [nameTable1, setNameTable1] = useState(null)
     const [nameTable2, setNameTable2] = useState(null)
-    // const [tableChat, setTableChat] = useState(null)
-    console.log(socket);
-    console.log(logged);
-    console.log(nameTable2);
-    console.log(chatList);
-    console.log(messages);
 
 
 
 
 
-    // settiamo il nome della prima parte della tabella chat con lo username
-    // tutto in minuscolo, la variabile settata servira per la creazione di una 
-    // nuova tabella chat con un altro utente selezionato facendo si che la nuova
-    // tabella chat sia composta da dal nome del utente loggato un underscore,
-    // succesivamente verra settato setNameTabel2 che conterra il nome del utente
-    // con il quale vogliamo creare la chat. La tabella sara composta da: 
-    // nameTable1_nameTable2
-    // tutto questo NON FUNZIONA!! ed in generale come soluzione farebbe schifo anche
-    // se funzionasse, DA RISOLVERE 
+
+    // Inizializza nameTable1 con lo username
     useEffect(() => {
         if (username) {
             setNameTable1(username.toLowerCase())
@@ -50,11 +39,7 @@ export default function MainPage() {
 
 
 
-    // settiamo il socket con endpoint //localhost:3000 --> poi con newsocket.on
-    // recuperiamo i messaggi, destrutturiamo i messaggi precedenti ed aggiungiamo 
-    // il nuovo messaggio alla lista --- dipendente dal log del utente se e true 
-    // esegue la funzione se no non viene eseguita --- IN FUTURO DA AUTENTICARE
-    // CON JWT AUTHENTICATE (la middleware esiste già)
+    // Connessione al socket quando l'utente è loggato e ha selezionato una chat
     useEffect(() => {
         if (!username || !logged) return;
 
@@ -62,7 +47,7 @@ export default function MainPage() {
         setSocket(newSocket);
 
         if (tableName) {
-            newSocket.emit('join', tableName); // JOIN ROOM
+            newSocket.emit('join', tableName)
         }
 
         newSocket.on("chat message", (msg) => {
@@ -74,7 +59,7 @@ export default function MainPage() {
         });
 
         return () => {
-            newSocket.emit('leave', tableName); // LEAVE ROOM
+            newSocket.emit('leave', tableName)
             newSocket.disconnect();
         };
     }, [logged, tableName]);
@@ -82,13 +67,10 @@ export default function MainPage() {
 
 
 
-    // recuperiamo i messaggi dal server in base al nome della tabella ma in realtà 
-    // lo recuperiamo in base al nome del utente, per maggiore chiarezza in futuro 
-    // cambiare i nomi delle variabili
+    // Recupera i messaggi della chat selezionata
     useEffect(() => {
         if (!tableName) return
         const verifyIfChatListContainTablename = chatList.find(element => element.table_name === tableName)
-        console.log(verifyIfChatListContainTablename);
 
         if (!verifyIfChatListContainTablename) return
 
@@ -101,7 +83,7 @@ export default function MainPage() {
                         tableName: tableName,
                         data: data
                     })
-                    console.log(data);
+
 
                 } else {
                     console.error("Errore nel recupero dei messaggi")
@@ -115,13 +97,7 @@ export default function MainPage() {
     }, [tableName, chatList])
 
 
-    // funzione per mandare il messaggio scritto nel form al endpoint sul server
-    // che a sua volta aggiungerà il messaggio alla tabella sql dei messaggi 
-    // NOTA BENE: la funzione get messages viene eseguita solo una volta al login, l'implementazione 
-    // viene eseguita tramite socket.io destrutturanto i messaggi caricati al login del
-    // utente, ciò significa che i messaggi diventano permanenti solo al successivo accesso 
-    // dell'utente. Questo potrebbe causare problemi di visualizzazione dei messaggi durante
-    // la sessione corrente degli utenti --- DA CORREGGERE QUESTA PARTE IN FUTURO
+    // Invio di un nuovo messaggio
     const sendMessage = (e) => {
         e.preventDefault()
         if (message.trim() && username?.trim() && socket) {
@@ -133,10 +109,7 @@ export default function MainPage() {
 
 
 
-    // funzione per il logout, rimuove il token da localstorage setta la variabile
-    // logged su false e riporta alla home page --- FUNZIONE CHE FA CAGARE SARA DA 
-    // MIGLIORARE ASSOLUTAMENTE IN FUTURO PERCHE NON E CHIARO IL SUO RAPPORTO CON
-    // LA LIBRERIA DI PASSPORT
+    // Gestione del logout
     function handleLogOut() {
         localStorage.removeItem('token')
         setLogged(false)
@@ -144,14 +117,7 @@ export default function MainPage() {
     }
 
 
-
-    // Recupera la chatlist per ogni utente, la variabile username e solo una parte del 
-    // nome delle tabele, passiamo l'username, il server cerca lo username nel nome delle
-    // tabelle esistenti nel database, recupera le tabelle con le chat degli altri utenti con 
-    // solo l'ultimo messaggio contenente. Pare funzionare (ma non ne sono sicuro), comunque
-    // in caso di un enorme mole di dati sarebbe poco efficente, per ora potrenne andare bene però.
-    // Viene richiamata quando viene settato lo username, che pero viene recuperato con use params quindi
-    // ci sono possibili problemi di sicurezza legati al modo con il quale recuperiamo i dati dello username
+    // Recupera la lista delle chat dell'utente
     useEffect(() => {
         async function getChatList() {
             try {
@@ -169,14 +135,14 @@ export default function MainPage() {
     }, [username])
 
 
-    // funzione per far vedere in chat window la chat selezionata, pare fatta bene.
+    // Seleziona una chat dalla lista
     function selectChat(index) {
         setTableName(chatList[index].table_name)
 
     }
 
 
-    // funzione per recuperare la lista degli utenti, funziona non ha problemi per ora
+    // Recupera la lista degli utenti per avviare nuove chat
     useEffect(() => {
         async function getUsers() {
             try {
@@ -195,12 +161,7 @@ export default function MainPage() {
 
 
 
-    // funzione per creare una nuova chat, funziona PARZIALMENTE, la chat viene creata
-    // perccato che il nome della tabella chat non e composto dalle variabili nameTable1 e
-    // nameTable2 ma da un bel undefind, boh
-    // comunque viene attivata nel momento in cui viene settato nameTable2 che a sua volta 
-    // e settato nel momento in cui clicchi su un utente nella lista utenti. 
-    // DA SISTEMARE
+    // Crea una nuova chat quando entrambi i nomi tabella sono presenti
     useEffect(() => {
         if (!nameTable1 || !nameTable2) return
 
@@ -218,12 +179,11 @@ export default function MainPage() {
         createNewChat()
     }, [nameTable2])
 
-    // function setNameTableChat(params) {
-    //     setNameTableChat(params)
-    // }
+
 
     return (
         <>
+            {/* Sezione pulsanti di navigazione */}
             <div className={style.button_container}>
                 <button className='btn btn-secondary' onClick={handleLogOut}>LogOut</button>
                 <button className='btn btn-secondary' onClick={() => navigate('/signin')}>SignIn</button>
@@ -243,7 +203,7 @@ export default function MainPage() {
                         </div>
                     ))}
                 </div>
-
+                {/* Finestra della chat selezionata */}
                 <div className={style.chat_window}>
                     <h3>Chat Window</h3>
                     <div className={style.message_container}>
@@ -255,7 +215,7 @@ export default function MainPage() {
                             </div>
                         ))}
                     </div>
-
+                    {/* Form per inviare nuovi messaggi */}
                     <div className={style.send_message_div}>
                         <form className='d-flex' onSubmit={sendMessage}>
                             <input className='form-control' type="text" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
@@ -263,19 +223,21 @@ export default function MainPage() {
                         </form>
                     </div>
                 </div>
-
+                {/* Sezione lista utenti per avviare nuove chat */}
                 <div className={style.user_container}>
                     <div className='d-flex align-items-center'>
                         <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
                         <h5>{username}</h5>
                     </div>
-
+                    {/* Form di ricerca utenti */}
                     <div className={style.search_user_form}>
                         <form className='d-flex '>
                             <input className='form-control' type="text" placeholder="Search an user..." />
                             <button className='btn btn-secondary' type="submit">Search</button>
                         </form>
                     </div>
+
+                    {/* Elenco utenti */}
                     {usersList.map((user, index) => (
                         <div key={index} onClick={() => setNameTable2(user.username)}>
                             <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
