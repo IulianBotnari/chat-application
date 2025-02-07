@@ -203,7 +203,7 @@ export default function MainPage() {
                         </div>
                     ))}
                     <div className={`${style.user_chatlist}`}>
-                        <img src='/vite.svg' alt='profilepicture' />
+                        <img style={{ width: 40 }} src='/vite.svg' alt='profilepicture' />
                         <h3>{username}</h3>
                     </div>
                 </div>
@@ -237,7 +237,24 @@ export default function MainPage() {
                     {/* Form per inviare nuovi messaggi */}
                     <div className={style.send_message_div}>
                         <form className='d-flex' onSubmit={sendMessage}>
+                            <button className={`${style.button_icon}`}>
+                                <i className="bi bi-file-plus-fill"></i>
+
+                            </button>
+
                             <input className='form-control' type="text" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
+
+                            <button className={`${style.button_icon}`}>
+                                <i className="bi bi-emoji-smile-fill"></i>
+
+                            </button>
+
+                            <button className={`${style.button_icon}`}>
+                                <i className="bi bi-mic-fill"></i>
+
+                            </button>
+
+
                             <button className='btn btn-secondary' type="submit">Send</button>
                         </form>
                     </div>

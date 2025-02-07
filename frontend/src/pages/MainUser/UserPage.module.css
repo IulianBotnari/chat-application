@@ -18,15 +18,17 @@ body {
 .chat_container {
     display: flex;
     flex-direction: column;
-
+    /* background-color: rgb(80, 75, 75); */
+    background-color: #6c757d;
 
 
     h3 {
         padding: .5rem;
         margin: 0 !important;
         min-height: 54px;
+        box-shadow: 1px 3px 4px 0px #1a1919;
 
-        border-bottom: 1px solid black !important;
+
     }
 }
 
@@ -54,13 +56,21 @@ body {
 .user_chatlist {
     margin-top: auto;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-content: center;
+    background-color: #6c757d;
+    /* box-shadow: 1px -5px 4px 0px #beb3b3; */
+    padding: .2rem;
+
 
     height: 10%;
 
     h3 {
         border: none !important;
+        color: white;
+        box-shadow: 1px -5px 4px 0px #80727200 !important;
+        align-content: center;
+        font-size: 25px;
     }
 }
 
@@ -81,8 +91,9 @@ body {
     h3 {
         padding: .5rem;
         margin: 0 !important;
+        background-color: rgb(233, 227, 227);
+        box-shadow: 1px 5px 4px 0px #beb3b3;
 
-        border-bottom: 1px solid black !important;
     }
 }
 
@@ -94,13 +105,34 @@ body {
     height: 10%;
     display: flex;
     align-items: center;
+    background-color: rgb(233, 227, 227);
+    box-shadow: 1px -5px 4px 0px #beb3b3;
+
 
     form {
         width: 100%;
+        padding: 0.5rem !important;
+    }
+
+    .button_icon {
+        padding: 0;
+        border: none;
+        background-color: rgba(199, 191, 191, 0);
+    }
+
+    i {
+        color: rgb(255, 255, 255);
+        font-weight: 800;
+        font-size: 20px;
+        margin: 0 .5rem !important;
+
     }
 }
 
 .message_container {
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
 
 
 
