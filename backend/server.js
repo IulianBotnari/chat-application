@@ -5,16 +5,16 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const dotenv = require('dotenv');
+dotenv.config();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const expressSession = require('express-session');
-const connectdb = require('./db/DbConnection');
 const router = require("./Router/Router");
 
 // Configurazione delle variabili d'ambiente
-dotenv.config();
+const connectdb = require('./db/DbConnection');
 const host = process.env.HOST;
 const port = process.env.PORT;
 const secret_key = process.env.SECRET_KEY;

@@ -203,6 +203,9 @@ export default function MainPage() {
                         </div>
                     ))}
                 </div>
+
+
+
                 {/* Finestra della chat selezionata */}
                 <div className={style.chat_window}>
                     <h3>Chat Window</h3>
@@ -215,6 +218,9 @@ export default function MainPage() {
                             </div>
                         ))}
                     </div>
+
+
+
                     {/* Form per inviare nuovi messaggi */}
                     <div className={style.send_message_div}>
                         <form className='d-flex' onSubmit={sendMessage}>
@@ -223,12 +229,18 @@ export default function MainPage() {
                         </form>
                     </div>
                 </div>
+
+
+
                 {/* Sezione lista utenti per avviare nuove chat */}
                 <div className={style.user_container}>
                     <div className='d-flex align-items-center'>
                         <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
                         <h5>{username}</h5>
                     </div>
+
+
+
                     {/* Form di ricerca utenti */}
                     <div className={style.search_user_form}>
                         <form className='d-flex '>
@@ -236,6 +248,9 @@ export default function MainPage() {
                             <button className='btn btn-secondary' type="submit">Search</button>
                         </form>
                     </div>
+
+
+
 
                     {/* Elenco utenti */}
                     {usersList.map((user, index) => (
