@@ -22,7 +22,6 @@ export default function MainPage() {
     const [usersList, setUsersList] = useState([])
     const [nameTable1, setNameTable1] = useState(null)
     const [nameTable2, setNameTable2] = useState(null)
-    const [index, setIndex] = useState(null)
     const [isClicked, setIsClicked] = useState(false)
 
 

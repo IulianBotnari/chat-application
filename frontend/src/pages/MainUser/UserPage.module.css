@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(255, 255, 255) !important;
+    background-color: rgba(255, 204, 162, 0.89) !important;
 }
 
 .container {
@@ -181,6 +181,7 @@ body {
     padding-top: 1rem;
     padding-left: 1rem;
     padding-right: 1rem;
+    padding-bottom: 1rem;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #c7ccc7 #2e2d2d;
