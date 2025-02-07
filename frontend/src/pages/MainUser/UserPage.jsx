@@ -211,10 +211,16 @@ export default function MainPage() {
                     <h3>Chat Window</h3>
                     <div className={style.message_container}>
                         {messages.data?.map((msg, index) => (
-                            <div key={index} className={`d-flex ${username === msg.username ? "flex-row-reverse" : ""}`}>
-                                <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
-                                <h5>{msg.username}</h5>
-                                <p className='m-0'>{msg.message}</p>
+                            <div key={index} className={`d-flex flex-start ${username === msg.username ? "flex-row-reverse" : ""}`}>
+                                <div className='d-flex flex-column'>
+
+                                    <div className={``}>
+                                        <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
+                                        <h5>{msg.username === username ? "io" : msg.username}</h5>
+
+                                    </div>
+                                    <p className={`m-0 ${style.message_chatwindow}`}>{msg.message}</p>
+                                </div>
                             </div>
                         ))}
                     </div>
