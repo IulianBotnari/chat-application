@@ -1,33 +1,45 @@
+
+// Importazione dei moduli necessari
 const express = require('express');
-const { createServer } = require('http')
-const { Server } = require('socket.io')
+const { createServer } = require('http');
+const { Server } = require('socket.io');
 const cors = require('cors');
-const app = express();
-const httpServer = createServer(app)
-
 const dotenv = require('dotenv');
-dotenv.config();
-const host = process.env.HOST
-const port = process.env.PORT
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const expressSession = require('express-session')
-const connectdb = require('./db/DbConnection')
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const expressSession = require('express-session');
+const connectdb = require('./db/DbConnection');
 const router = require("./Router/Router");
-const secret_key = process.env.SECRET_KEY
+
+// Configurazione delle variabili d'ambiente
+dotenv.config();
+const host = process.env.HOST;
+const port = process.env.PORT;
+const secret_key = process.env.SECRET_KEY;
+
+// Inizializzazione dell'app Express e del server HTTP
+const app = express();
+const httpServer = createServer(app);
+
+// Configurazione di middlewares
+app.use(express.json()); // Per parsing delle richieste JSON
+app.use(cors()); // Abilitazione CORS per tutte le origini
 
 
-app.use(express.json())
-app.use(cors())
+// Configurazione di Socket.IO con CORS
 
 const io = new Server(httpServer, {
     cors: {
-        origin: "*",
+        origin: "*", // Consente connessioni da qualsiasi origine
         methods: ["GET", "POST"]
     }
 });
+
+
+
+// Configurazione di Passport con strategia locale
 passport.use(new LocalStrategy(
     async (username, password, done) => {
         try {
@@ -37,7 +49,7 @@ passport.use(new LocalStrategy(
             const user = rows[0]
             if (!user) return done(null, false, { message: 'User not found' })
 
-
+            // Verifica della password
             const isMatch = await bcrypt.compare(password, user.password)
             if (!isMatch) return done(null, false, { message: 'Wrong password' })
 
@@ -50,7 +62,7 @@ passport.use(new LocalStrategy(
 
 
 
-
+// Serializzazione e deserializzazione dell'utente per la gestione della sessione
 passport.serializeUser((user, done) => done(null, user.id))
 
 
@@ -62,6 +74,9 @@ passport.deserializeUser((id, done) => {
     })
 })
 
+
+
+// Middleware per autenticazione JWT
 const authenticateJWT = (req, res, next) => {
     const token = req.header('Authorization')?.split(' ')[1]
 
@@ -75,40 +90,45 @@ const authenticateJWT = (req, res, next) => {
     })
 }
 
+
+// Endpoint per la registrazione di un nuovo utente
 app.post('/register', async (req, res) => {
     const { name, surname, username, password, email, profile_pic } = req.body;
     try {
-        const [existingUsers] = await connectdb.query('SELECT * FROM users WHERE username = ?', [username]) || [[]];
+        const [existingUsers] = await connectdb.query('SELECT * FROM users WHERE username = ?', [username]) || [[]]
         if (existingUsers.length > 0) {
             return res.status(400).json({ message: 'Username già esistente' });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10); // Hash della password
         await connectdb.query(
             'INSERT INTO users (name, surname, username, password, email, profile_pic) VALUES (?,?,?,?,?,?)',
             [name, surname, username, hashedPassword, email, profile_pic]
         );
 
-        res.json({ message: 'User successfully inserted' });
+        res.json({ message: 'User successfully inserted' })
     } catch (err) {
         console.error("Errore di registrazione:", err);
-        res.status(500).json({ message: 'Registration failed', error: err.message });
+        res.status(500).json({ message: 'Registration failed', error: err.message })
     }
 });
 
-
+// Endpoint per il login
 app.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
 
     const token = jwt.sign({ userId: req.user.id }, secret_key, { expiresIn: '3h' })
     res.json({ token })
 })
 
+
+// Uso del router principale
 app.use("/", router)
 
+
+
+// Endpoint per il recupero dei messaggi
 app.get('/messages', async (req, res) => {
     const { tablename } = req.query
-    console.log(tablename);
-
 
     try {
 
@@ -122,7 +142,7 @@ app.get('/messages', async (req, res) => {
 });
 
 
-// Socket.IO per la comunicazione in tempo reale
+// Configurazione di Socket.IO per la comunicazione in tempo reale
 io.on('connection', (socket) => {
     console.log('Un utente si è connesso');
 
@@ -151,7 +171,7 @@ io.on('connection', (socket) => {
     });
 });
 
-
+// Avvio del server
 httpServer.listen(port, () => {
     console.log(`Server running at ${host}:${port}`)
 })
