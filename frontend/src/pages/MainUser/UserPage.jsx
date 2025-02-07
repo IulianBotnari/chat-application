@@ -22,6 +22,9 @@ export default function MainPage() {
     const [usersList, setUsersList] = useState([])
     const [nameTable1, setNameTable1] = useState(null)
     const [nameTable2, setNameTable2] = useState(null)
+    const [index, setIndex] = useState(null)
+    const [isClicked, setIsClicked] = useState(false)
+
 
 
 
@@ -139,6 +142,12 @@ export default function MainPage() {
     function selectChat(index) {
         setTableName(chatList[index].table_name)
 
+
+
+        setIsClicked(index)
+
+
+
     }
 
 
@@ -194,7 +203,10 @@ export default function MainPage() {
                 <div className={style.chat_container}>
                     <h3>ChatList</h3>
                     {chatList.map((table, index) => (
-                        <div key={index} className={style.select_chat} onClick={() => selectChat(index)}>
+                        <div key={index}
+                            className={style.select_chat}
+                            onClick={() => selectChat(index)}
+                            style={{ backgroundColor: isClicked === index ? 'rgb(80, 75, 75)' : '#6c757d' }}>
                             <div className='d-flex align-items-center'>
                                 <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
                                 <h5>{table.table_name}</h5>
@@ -219,11 +231,11 @@ export default function MainPage() {
                     <div className={style.message_container}>
                         {messages.data?.map((msg, index) => (
                             <div key={index} className={`d-flex flex-start ${username === msg.username ? "flex-row-reverse" : ""}`}>
-                                <div className='d-flex flex-column align-items-start'>
+                                <div className={`${msg.username === username ? "d-flex flex-column align-items-end" : "d-flex flex-column align-items-start"}`}>
 
                                     <div className={``}>
 
-                                        <h5>{msg.username === username ? "io" : msg.username}</h5>
+                                        <h5 className={``}>{msg.username === username ? "io" : msg.username}</h5>
 
                                     </div>
                                     <p className={`m-0 ${style.message_chatwindow}`}>{msg.message}</p>
@@ -290,7 +302,7 @@ export default function MainPage() {
                         </div>
                     ))}
                 </div>
-            </div>
+            </div >
         </>
     )
 }
