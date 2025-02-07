@@ -115,14 +115,31 @@ body {
     display: flex;
     flex-direction: column;
 
-
-    h3 {
+    .header_chatwindow {
         padding: .5rem;
         margin: 0 !important;
         background-color: rgb(233, 227, 227);
         box-shadow: 1px 5px 4px 0px #beb3b3;
+        display: flex;
+        justify-content: space-between;
+
+        & .button_icon {
+            padding: 0;
+            border: none;
+            background-color: rgba(199, 191, 191, 0);
+        }
+
+        & i {
+            color: rgb(255, 255, 255);
+            font-weight: 800;
+            font-size: 20px;
+            margin: 0 .5rem !important;
+
+        }
 
     }
+
+
 }
 
 

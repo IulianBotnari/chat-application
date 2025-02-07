@@ -227,10 +227,30 @@ export default function MainPage() {
 
                 {/* Finestra della chat selezionata */}
                 <div className={style.chat_window}>
-                    <h3 className={``}>
-                        <img src='/vite.svg' alt='profilepicture' />
-                        Marcolino
-                    </h3>
+                    <div className={style.header_chatwindow}>
+                        <h3 className={``}>
+                            <img src='/vite.svg' alt='profilepicture' />
+                            Marcolino
+                        </h3>
+                        <div className='d-flex align-items-center'>
+                            <button className={`${style.button_icon}`}>
+                                <i className="bi bi-camera-reels-fill"></i>
+
+                            </button>
+                            <button className={`${style.button_icon}`}>
+                                <i className="bi bi-telephone-fill"></i>
+
+                            </button>
+                            <button className={`${style.button_icon}`}>
+                                <i className="bi bi-three-dots-vertical"></i>
+
+                            </button>
+
+                        </div>
+
+
+
+                    </div>
                     <div className={style.message_container}>
                         {messages.data?.map((msg, index) => (
                             <div key={index} className={`d-flex flex-start ${username === msg.username ? "flex-row-reverse" : ""}`}>
