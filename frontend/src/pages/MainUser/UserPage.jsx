@@ -217,6 +217,9 @@ export default function MainPage() {
                     <div className={`${style.user_chatlist}`}>
                         <img style={{ width: 40 }} src='/vite.svg' alt='profilepicture' />
                         <h3>{username}</h3>
+                        <button className={`${style.button_icon}`}>
+                            <i className='bi bi-gear-fill'></i>
+                        </button>
                     </div>
                 </div>
 
@@ -231,9 +234,9 @@ export default function MainPage() {
                     <div className={style.message_container}>
                         {messages.data?.map((msg, index) => (
                             <div key={index} className={`d-flex flex-start ${username === msg.username ? "flex-row-reverse" : ""}`}>
-                                <div className={`${msg.username === username ? "d-flex flex-column align-items-end" : "d-flex flex-column align-items-start"}`}>
+                                <div className={`${msg.username === username ? "d-flex flex-column align-items-end m-0" : "d-flex flex-column align-items-start"}`}>
 
-                                    <div className={``}>
+                                    <div className={`m-0`}>
 
                                         <h5 className={``}>{msg.username === username ? "io" : msg.username}</h5>
 
@@ -302,7 +305,7 @@ export default function MainPage() {
                         </div>
                     ))}
                 </div>
-            </div >
+            </div>
         </>
     )
 }
