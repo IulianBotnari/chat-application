@@ -5,7 +5,7 @@ import style from './UserPage.module.css'
 import { useNavigate } from 'react-router'
 import { useGlobalContext } from '../../Contexts/GlobalContext/Context'
 import io from 'socket.io-client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router'
 
 
@@ -25,13 +25,13 @@ export default function MainPage() {
     const [nameTable2, setNameTable2] = useState(null)
     const [isClicked, setIsClicked] = useState(false)
     const [search, setSearch] = useState("")
-    const [searched, setSearched] = useState(false)
+    const messagesEndRef = useRef(null);
 
 
 
     console.log(usersList);
     console.log(search);
-    console.log(searched);
+
 
 
 
@@ -75,7 +75,12 @@ export default function MainPage() {
         };
     }, [logged, tableName]);
 
-
+    useEffect(() => {
+        // Scrolla fino alla fine ogni volta che i messaggi vengono aggiornati
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+        }
+    }, [messages])
 
 
     // Recupera i messaggi della chat selezionata
@@ -290,7 +295,10 @@ export default function MainPage() {
                                     <p className={`m-0 p-1 ${style.message_chatwindow}`}>{msg.message}</p>
                                 </div>
                             </div>
+
+
                         )) : <p>Nessun messaggio</p>}
+                        <div ref={messagesEndRef} /> {/* Questo è il punto dove si scorrerà */}
                     </div>
 
 

@@ -200,7 +200,7 @@ body {
     padding-right: 1rem;
     padding-bottom: 1rem;
     overflow-y: auto;
-    scrollbar-width: thin;
+    scrollbar-width: none;
     scrollbar-color: #c7ccc7 #2e2d2d;
 
     div {
