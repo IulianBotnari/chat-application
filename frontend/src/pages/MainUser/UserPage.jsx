@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
 
+
 // Componente principale della pagina
 export default function MainPage() {
     const { setLogged, logged } = useGlobalContext()
@@ -23,7 +24,14 @@ export default function MainPage() {
     const [nameTable1, setNameTable1] = useState(null)
     const [nameTable2, setNameTable2] = useState(null)
     const [isClicked, setIsClicked] = useState(false)
+    const [search, setSearch] = useState("")
+    const [searched, setSearched] = useState(false)
 
+
+
+    console.log(usersList);
+    console.log(search);
+    console.log(searched);
 
 
 
@@ -152,21 +160,34 @@ export default function MainPage() {
 
 
     // Recupera la lista degli utenti per avviare nuove chat
-    useEffect(() => {
-        async function getUsers() {
-            try {
-                const response = await fetch(`http://localhost:3000/users`)
-                if (response.ok) {
-                    const data = await response.json()
-                    setUsersList(data)
-                }
-            } catch (err) {
-                console.error("Errore nel recupero degli utenti:", err)
+    async function getUsers() {
+        try {
+            const response = await fetch(`http://localhost:3000/users?search=${search}`);
+            if (response.ok) {
+                const data = await response.json();
+                setUsersList(data); // Aggiorna la lista degli utenti con i risultati
             }
+        } catch (err) {
+            console.error("Errore nel recupero degli utenti:", err);
         }
+    }
 
-        getUsers()
-    }, [])
+    // useEffect per eseguire la richiesta ogni volta che cambia il parametro di ricerca
+    useEffect(() => {
+        if (search.length > 1) {
+            getUsers();
+        }
+    }, [search]); // Esegui ogni volta che `search` cambia
+
+    // Funzione per gestire il submit della ricerca
+    function searchUser(e) {
+        e.preventDefault(); // Impedisce il comportamento di default del form
+        if (search.length > 1) {
+            getUsers(); // Rileva la ricerca ogni volta che l'utente sottomette il form
+        }
+    }
+
+
 
 
 
@@ -313,9 +334,9 @@ export default function MainPage() {
 
                     {/* Form di ricerca utenti */}
                     <div className={style.search_user_form}>
-                        <form className='d-flex '>
-                            <input className='form-control' type="text" placeholder="Search an user..." />
-                            <button className='btn btn-secondary' type="submit">Search</button>
+                        <form className='d-flex ' onSubmit={searchUser}>
+                            <input className='form-control' type="text" placeholder="Search an user..." value={search} onChange={(e) => setSearch(e.target.value)} />
+                            <button className='btn btn-secondary' type="submit" >Search</button>
                         </form>
                     </div>
 
