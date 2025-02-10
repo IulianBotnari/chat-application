@@ -174,17 +174,17 @@ export default function MainPage() {
 
     // useEffect per eseguire la richiesta ogni volta che cambia il parametro di ricerca
     useEffect(() => {
-        if (search.length > 1) {
-            getUsers();
-        }
-    }, [search]); // Esegui ogni volta che `search` cambia
+
+        getUsers();
+
+    }, [])
 
     // Funzione per gestire il submit della ricerca
     function searchUser(e) {
-        e.preventDefault(); // Impedisce il comportamento di default del form
-        if (search.length > 1) {
-            getUsers(); // Rileva la ricerca ogni volta che l'utente sottomette il form
-        }
+        e.preventDefault()
+
+        getUsers()
+
     }
 
 

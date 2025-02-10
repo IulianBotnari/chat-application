@@ -10,32 +10,33 @@ async function getUser(req, res) {
     console.log(search);
 
     try {
-        // Controlla se è stato fornito un termine di ricerca
+
         if (search && search.length > 1) {
-            const [userSearch] = await connectdb.query('SELECT * FROM users');
-            const results = userSearch.filter(user => user.username.toLowerCase() === search.toLowerCase());
+            const [userSearch] = await connectdb.query('SELECT * FROM users')
+            const results = userSearch.filter(user => user.username.toLowerCase().includes(search.toLowerCase()))
             console.log(userSearch);
+            console.log(results);
 
 
-            // Se ci sono risultati per la ricerca, restituisci i risultati
+
+
             if (results.length > 0) {
-                return res.json(results);  // Risposta inviata, quindi si esce dalla funzione
+                return res.json(results)
             } else {
-                return res.status(404).json({ message: "User not found" });  // Nessun utente trovato per la ricerca
+                return res.status(404).json({ message: "User not found" })
             }
         }
 
-        // Se non c'è una ricerca, restituisci tutti gli utenti
-        const [users] = await connectdb.query("SELECT * FROM users");
+        const [users] = await connectdb.query("SELECT * FROM users")
 
         if (users.length === 0) {
-            return res.status(404).json({ message: "No users found" });
+            return res.status(404).json({ message: "No users found" })
         }
 
-        res.json(users);  // Risposta inviata
+        res.json(users);
     } catch (err) {
-        console.error("Errore nel recupero utente:", err);
-        res.status(500).json({ error: err.message });  // Risposta in caso di errore
+        console.error("Errore nel recupero utente:", err)
+        res.status(500).json({ error: err.message })
     }
 }
 
