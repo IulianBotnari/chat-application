@@ -101,6 +101,11 @@ body {
         margin: 0 .5rem !important;
 
     }
+
+    i:hover {
+        transition: 300ms;
+        font-size: 30px;
+    }
 }
 
 /* #endregion chat container*/
@@ -140,6 +145,13 @@ body {
 
         }
 
+        & i:hover {
+
+            transition: 300ms;
+            font-size: 23px;
+
+        }
+
     }
 
 
@@ -175,6 +187,11 @@ body {
         margin: 0 .5rem !important;
 
     }
+
+    i:hover {
+        transition: 300ms;
+        font-size: 23px;
+    }
 }
 
 .message_container {
@@ -185,12 +202,6 @@ body {
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #c7ccc7 #2e2d2d;
-
-
-
-
-
-
 
     div {
 
@@ -228,13 +239,26 @@ body {
 
     flex: 2;
 
+    background-color: #6c757d;
+    color: white;
+
+    div {
+        padding: 1rem;
+        display: flex;
+    }
+
+    .contacts:hover {
+        background-color: #2e2d2d;
+        cursor: pointer;
+    }
+
 }
 
 .search_user_form {
     display: flex;
     align-items: center;
     height: 10%;
-    border: 1px solid black;
+
 }
 
 
@@ -264,3 +288,5 @@ body {
         margin-left: 1rem;
     }
 }
+
+/*#endregion Button Div area*/

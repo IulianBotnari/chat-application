@@ -252,7 +252,7 @@ export default function MainPage() {
                     </div>
                     <div className={style.message_container}>
 
-                        {messages.data?.map((msg, index) => (
+                        {messages.data ? messages.data.map((msg, index) => (
                             <div key={index} className={`d-flex flex-start ${username === msg.username ? "flex-row-reverse" : ""}`}>
                                 <div className={`${msg.username === username ? "d-flex flex-column align-items-end m-0" : "d-flex flex-column align-items-start"}`}>
 
@@ -264,7 +264,7 @@ export default function MainPage() {
                                     <p className={`m-0 p-1 ${style.message_chatwindow}`}>{msg.message}</p>
                                 </div>
                             </div>
-                        ))}
+                        )) : <p>Nessun messaggio</p>}
                     </div>
 
 
@@ -319,7 +319,7 @@ export default function MainPage() {
 
                     {/* Elenco utenti */}
                     {usersList.map((user, index) => (
-                        <div key={index} onClick={() => setNameTable2(user.username)}>
+                        <div className={style.contacts} key={index} onClick={() => setNameTable2(user.username)}>
                             <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
                             <h5>{user.username}</h5>
                         </div>
