@@ -54,6 +54,31 @@ async function getChatList(req, res) {
 
 async function createChat(req, res) {
     const { tableName } = req.query
+    const [nameTable1, nameTable2] = tableName.split(',')
+
+
+    console.log(tableName);
+
+    console.log(nameTable1);
+
+
+    console.log(nameTable2);
+    const requestTableName = nameTable1 + '_' + nameTable2
+    const reverseTableName = nameTable2 + '_' + nameTable1
+
+    try {
+
+        const [result] = await connectdb.query('SELECT * FROM ??', [reverseTableName]);
+
+        if (result.length > 0) {
+            return res.json({ message: 'Chat already exists' });
+        }
+
+    } catch (err) { console.error(); }
+
+
+
+
     try {
         const query = (`
             CREATE TABLE ?? (
@@ -62,7 +87,7 @@ async function createChat(req, res) {
                 message TEXT NOT NULL,
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )`);
-        await connectdb.query(query, [tableName])
+        await connectdb.query(query, [requestTableName])
         res.status(201).json({ message: "Chat creata con successo" })
     } catch (err) {
         console.error(`Errore nella creazione della chat`, err)

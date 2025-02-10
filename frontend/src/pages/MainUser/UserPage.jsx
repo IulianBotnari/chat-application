@@ -173,9 +173,13 @@ export default function MainPage() {
     useEffect(() => {
         if (!nameTable1 || !nameTable2) return
 
+        const arrayTableName = [nameTable1.toLowerCase(), nameTable2.toLowerCase()]
+
+        console.log(arrayTableName);
+
         async function createNewChat() {
             try {
-                const response = await fetch(`http://localhost:3000/createchat?tableName=${nameTable1}_${nameTable2.toLowerCase()}`)
+                const response = await fetch(`http://localhost:3000/createchat?tableName=${arrayTableName}`)
                 if (response.ok) {
                     console.log("Chat creata con successo")
                 }
