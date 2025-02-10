@@ -56,6 +56,10 @@ async function createChat(req, res) {
     const { tableName } = req.query
     const [nameTable1, nameTable2] = tableName.split(',')
 
+    if (nameTable2 === nameTable1) {
+        res.json({ message: 'Non puoi creare una chat con te stesso' })
+    }
+
 
     console.log(tableName);
 
@@ -63,8 +67,10 @@ async function createChat(req, res) {
 
 
     console.log(nameTable2);
-    const requestTableName = nameTable1 + '_' + nameTable2
-    const reverseTableName = nameTable2 + '_' + nameTable1
+    const requestTableName = nameTable1 + nameTable2
+    const reverseTableName = nameTable2 + nameTable1
+
+
 
     try {
 
@@ -80,6 +86,9 @@ async function createChat(req, res) {
 
 
     try {
+        if (nameTable2 === nameTable1) {
+            return res.json({ message: 'Non puoi creare una chat con te stesso' })
+        }
         const query = (`
             CREATE TABLE ?? (
                 id INT AUTO_INCREMENT PRIMARY KEY,

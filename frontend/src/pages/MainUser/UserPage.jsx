@@ -30,6 +30,7 @@ export default function MainPage() {
 
 
 
+
     // Inizializza nameTable1 con lo username
     useEffect(() => {
         if (username) {
@@ -212,7 +213,7 @@ export default function MainPage() {
                             style={{ backgroundColor: isClicked === index ? 'rgb(80, 75, 75)' : '#6c757d' }}>
                             <div className='d-flex align-items-center'>
                                 <img src="/vite.svg" alt="img profile" style={{ width: 30 }} />
-                                <h5>{table.table_name}</h5>
+                                <h5>{table.table_name.replace(new RegExp(username.toLowerCase(), 'g'), "",)}</h5>
                             </div>
                             <p>{table.data[0]?.message}</p>
                         </div>
@@ -233,7 +234,7 @@ export default function MainPage() {
                     <div className={style.header_chatwindow}>
                         <h3 className={``}>
                             <img src='/vite.svg' alt='profilepicture' />
-                            Marcolino
+                            {chatList[isClicked] ? chatList[isClicked].table_name.replace(new RegExp(username.toLowerCase(), 'g'), "",) : ""}
                         </h3>
                         <div className='d-flex align-items-center'>
                             <button className={`${style.button_icon}`}>
