@@ -1,15 +1,15 @@
 body {
-    background-color: rgba(255, 204, 162, 0.89) !important;
+    background-image: url("background.jpg");
 }
 
 .container {
     height: 90vh;
     width: 90vw;
     display: flex;
-    background-color: rgb(255, 255, 255);
+
     /* border-radius: 30px; */
 
-    border: 3px solid rgb(190, 181, 181);
+    border: 3px solid rgb(206, 10, 10);
     border-radius: 10px;
 
 }
@@ -20,7 +20,7 @@ body {
     display: flex;
     flex-direction: column;
     /* background-color: rgb(80, 75, 75); */
-    background-color: #6c757d;
+    background-color: rgba(134, 5, 5, 0.678);
     color: white;
 
     h3 {
@@ -58,13 +58,13 @@ body {
 }
 
 .select_chat:hover {
-    background-color: rgb(80, 75, 75);
+    background-color: rgba(77, 3, 3, 0.678);
     cursor: pointer;
 
 }
 
 .select_chat:active {
-    background-color: rgb(80, 75, 75);
+    background-color: rgba(5, 0, 0, 0.678);
 
 }
 
@@ -73,7 +73,7 @@ body {
     display: flex;
     justify-content: start;
     align-content: center;
-    background-color: #6c757d;
+    background-color: rgba(134, 5, 5, 0.678);
     /* box-shadow: 1px -5px 4px 0px #beb3b3; */
     padding: .2rem;
 
@@ -122,6 +122,15 @@ body {
     flex-direction: column;
     background-image: url(/sfondo-chatwindow.webp);
 
+    div {
+
+
+
+        & p {
+            padding: 30px;
+        }
+    }
+
     .header_chatwindow {
         padding: .5rem;
         margin: 0 !important;
@@ -138,7 +147,7 @@ body {
         }
 
         & i {
-            color: rgb(255, 255, 255);
+            color: rgb(158, 0, 0) !important;
             font-weight: 800;
             font-size: 20px;
             margin: 0 .5rem !important;
@@ -146,7 +155,7 @@ body {
         }
 
         & i:hover {
-
+            /* position: absolute; */
             transition: 300ms;
             font-size: 23px;
 
@@ -158,11 +167,9 @@ body {
 }
 
 
-
-
 .send_message_div {
     margin-top: auto;
-    height: 10%;
+    min-height: 80px;
     display: flex;
     align-items: center;
     background-color: rgb(233, 227, 227);
@@ -177,11 +184,24 @@ body {
     .button_icon {
         padding: 0;
         border: none;
-        background-color: rgba(199, 191, 191, 0);
+        background-color: rgba(134, 5, 5, 0);
+        border-color: rgba(233, 10, 10, 0.678) !important;
+        margin-left: 1rem;
+    }
+
+    button {
+        background-color: rgb(134, 5, 5);
+        border-color: rgba(233, 10, 10, 0.678) !important;
+        margin-left: 1rem;
+
+    }
+
+    button:hover:last-child {
+        background-color: rgba(78, 3, 3, 0.678);
     }
 
     i {
-        color: rgb(150, 151, 238);
+        color: rgb(158, 0, 0) !important;
         font-weight: 800;
         font-size: 20px;
         margin: 0 .5rem !important;
@@ -239,7 +259,7 @@ body {
 
     flex: 2;
 
-    background-color: #6c757d;
+    background-color: rgba(134, 5, 5, 0.678);
     color: white;
 
     div {
@@ -248,7 +268,7 @@ body {
     }
 
     .contacts:hover {
-        background-color: #2e2d2d;
+        background-color: rgba(77, 3, 3, 0.678);
         cursor: pointer;
     }
 
@@ -285,7 +305,14 @@ body {
 
 
     button {
+        background-color: rgba(134, 5, 5, 0.678);
+        border-color: rgba(233, 10, 10, 0.678) !important;
         margin-left: 1rem;
+
+    }
+
+    button:hover {
+        background-color: rgba(78, 3, 3, 0.678);
     }
 }
 
