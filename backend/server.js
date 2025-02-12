@@ -122,12 +122,12 @@ app.post('/login', passport.authenticate('local', { session: false }), (req, res
 
 
 // Uso del router principale
-app.use("/", router)
+app.use("/", authenticateJWT, router)
 
 
 
 // Endpoint per il recupero dei messaggi
-app.get('/messages', async (req, res) => {
+app.get('/messages', authenticateJWT, async (req, res) => {
     const { tablename } = req.query
 
     try {

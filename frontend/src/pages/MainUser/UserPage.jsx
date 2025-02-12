@@ -92,7 +92,13 @@ export default function MainPage() {
 
         async function getMessages() {
             try {
-                const response = await fetch(`http://localhost:3000/messages?tablename=${tableName}`)
+                const token = localStorage.getItem('token')
+                const response = await fetch(`http://localhost:3000/messages?tablename=${tableName}`, {
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
                 if (response.ok) {
                     const data = await response.json()
                     setMessages({
@@ -137,7 +143,13 @@ export default function MainPage() {
     useEffect(() => {
         async function getChatList() {
             try {
-                const response = await fetch(`http://localhost:3000/chatlist?username=${username.toLowerCase()}`)
+                const token = localStorage.getItem('token')
+                const response = await fetch(`http://localhost:3000/chatlist?username=${username.toLowerCase()}`, {
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
                 if (response.ok) {
                     const data = await response.json()
                     setChatList(data)
@@ -167,7 +179,13 @@ export default function MainPage() {
     // Recupera la lista degli utenti per avviare nuove chat
     async function getUsers() {
         try {
-            const response = await fetch(`http://localhost:3000/users?search=${search}`);
+            const token = localStorage.getItem('token')
+            const response = await fetch(`http://localhost:3000/users?search=${search}`, {
+                method: "GET",
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
             if (response.ok) {
                 const data = await response.json();
                 setUsersList(data); // Aggiorna la lista degli utenti con i risultati
@@ -206,7 +224,12 @@ export default function MainPage() {
 
         async function createNewChat() {
             try {
-                const response = await fetch(`http://localhost:3000/createchat?tableName=${arrayTableName}`)
+                const response = await fetch(`http://localhost:3000/createchat?tableName=${arrayTableName}`, {
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
                 if (response.ok) {
                     console.log("Chat creata con successo")
                 }
@@ -220,7 +243,7 @@ export default function MainPage() {
 
     // funzione per troncare il testo 
     const textMaxLength = (text, maxLength) => {
-        if (text.length > maxLength) {
+        if (text?.length > maxLength) {
             return text.slice(0, maxLength) + '...';
         }
         return text;
