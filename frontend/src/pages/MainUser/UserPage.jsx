@@ -145,7 +145,13 @@ export default function MainPage() {
             socket.emit("chat message", { username, message, tableName })
             setMessage("")
         }
-        setShowPicker(!showPicker)
+
+        if (showPicker === true) {
+
+            setShowPicker(false)
+
+        }
+
     }
 
 
@@ -364,7 +370,7 @@ export default function MainPage() {
 
                             <input className='form-control' type="text" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
 
-                            <button className={`${style.button_icon}`} onClick={togglePicker}>
+                            <button type='file' className={`${style.button_icon}`} onClick={togglePicker} >
                                 <i className="bi bi-emoji-smile-fill"></i>
 
                             </button>
@@ -375,7 +381,7 @@ export default function MainPage() {
                             </button>
 
 
-                            <button className='btn btn-secondary' type="submit">Send</button>
+                            <button className='btn btn-secondary' type="submit" >Send</button>
                         </form>
                         {showPicker && (
                             <div className="emoji_window">
