@@ -363,14 +363,15 @@ export default function MainPage() {
                     {/* Form per inviare nuovi messaggi */}
                     <div className={style.send_message_div}>
                         <form className='d-flex' onSubmit={sendMessage}>
-                            <button className={`${style.button_icon}`}>
-                                <i className="bi bi-file-plus-fill"></i>
+                            <label for="file_input" className={`${style.input_icon}`}><i className="bi bi-file-plus-fill"></i></label>
+                            <input className="d-none" id='file_input' type="file" />
 
-                            </button>
+
+
 
                             <input className='form-control' type="text" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
 
-                            <button type='file' className={`${style.button_icon}`} onClick={togglePicker} >
+                            <button className={`${style.button_icon}`} onClick={togglePicker} >
                                 <i className="bi bi-emoji-smile-fill"></i>
 
                             </button>
