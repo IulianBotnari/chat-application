@@ -135,7 +135,7 @@ export default function MainPage() {
     function handleLogOut() {
         localStorage.removeItem('token')
         setLogged(false)
-        navigate('/home')
+        navigate('/login')
     }
 
 
