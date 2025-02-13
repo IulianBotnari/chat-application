@@ -7,6 +7,10 @@ import { useGlobalContext } from '../../Contexts/GlobalContext/Context'
 import io from 'socket.io-client'
 import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router'
+import data from '../../../node_modules/@emoji-mart/data'
+import Picker from '../../../node_modules/@emoji-mart/react'
+
+// import '../../../node_modules/emoji-mart/css/emoji-mart.css'
 
 
 
@@ -25,12 +29,27 @@ export default function MainPage() {
     const [nameTable2, setNameTable2] = useState(null)
     const [isClicked, setIsClicked] = useState(false)
     const [search, setSearch] = useState("")
+    const [showPicker, setShowPicker] = useState(false)
     const messagesEndRef = useRef(null);
 
 
+    console.log(message);
 
-    console.log(usersList);
-    console.log(search);
+    const handleEmpjiSelect = (emoji, e) => {
+
+
+        console.log(emoji);
+
+        // const selectedEmoji = document.getElementsByClassName(".picker").getAttribute('data')
+
+        setMessage(prevMessage => prevMessage + emoji.native);
+    }
+
+
+    const togglePicker = (e) => {
+        e.preventDefault()
+        setShowPicker(!showPicker)
+    }
 
 
 
@@ -126,6 +145,7 @@ export default function MainPage() {
             socket.emit("chat message", { username, message, tableName })
             setMessage("")
         }
+        setShowPicker(!showPicker)
     }
 
 
@@ -344,7 +364,7 @@ export default function MainPage() {
 
                             <input className='form-control' type="text" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
 
-                            <button className={`${style.button_icon}`}>
+                            <button className={`${style.button_icon}`} onClick={togglePicker}>
                                 <i className="bi bi-emoji-smile-fill"></i>
 
                             </button>
@@ -357,6 +377,12 @@ export default function MainPage() {
 
                             <button className='btn btn-secondary' type="submit">Send</button>
                         </form>
+                        {showPicker && (
+                            <div className="emoji_window">
+
+                                <Picker data={data} onEmojiSelect={handleEmpjiSelect} />
+                            </div>
+                        )}
                     </div>
                 </div>
 
