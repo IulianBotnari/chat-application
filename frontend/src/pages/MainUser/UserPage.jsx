@@ -9,6 +9,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router'
 import data from '../../../node_modules/@emoji-mart/data'
 import Picker from '../../../node_modules/@emoji-mart/react'
+import DleteMessageButton from '../../../Components/DeleteMessageButton'
 
 // import '../../../node_modules/emoji-mart/css/emoji-mart.css'
 
@@ -350,6 +351,7 @@ export default function MainPage() {
 
                                     </div>
                                     <p className={`mb-0 p-2 ${style.message_chatwindow}`}>{msg.message}</p>
+                                    <DleteMessageButton msgIndex={msg.id} tableName={tableName} />
                                 </div>
                             </div>
 
