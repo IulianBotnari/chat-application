@@ -363,13 +363,14 @@ export default function MainPage() {
                     {/* Form per inviare nuovi messaggi */}
                     <div className={style.send_message_div}>
                         <form className='d-flex' onSubmit={sendMessage}>
-                            <label for="file_input" className={`${style.input_icon}`}><i className="bi bi-file-plus-fill"></i></label>
+                            <label htmlFor="file_input" className={`${style.input_icon}`}><i className="bi bi-file-plus-fill"></i></label>
                             <input className="d-none" id='file_input' type="file" />
 
 
 
 
                             <input className='form-control' type="text" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
+                            <button className='btn btn-secondary' type="submit" >Send</button>
 
                             <button className={`${style.button_icon}`} onClick={togglePicker} >
                                 <i className="bi bi-emoji-smile-fill"></i>
@@ -382,7 +383,6 @@ export default function MainPage() {
                             </button>
 
 
-                            <button className='btn btn-secondary' type="submit" >Send</button>
                         </form>
                         {showPicker && (
                             <div className="emoji_window">
