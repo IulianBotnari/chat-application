@@ -122,7 +122,8 @@ app.post('/login', passport.authenticate('local', { session: false }), (req, res
 
 
 // Uso del router principale
-app.use("/", authenticateJWT, router)
+// app.use("/", authenticateJWT, router)
+app.use("/", router)
 
 
 
