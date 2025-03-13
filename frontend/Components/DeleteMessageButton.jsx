@@ -1,6 +1,12 @@
+import Style from "../Components/DeleteMessageButton.module.css"
+import { useGlobalContext } from "../src/Contexts/GlobalContext/Context";
+
+export default function DeleteMessageButton({ msgIndex, tableName, msgUrename, username }) {
+
+    const { setDleteMessage } = useGlobalContext()
 
 
-export default function DleteMessageButton({ msgIndex, tableName }) {
+
 
     async function deleteMessage() {
         try {
@@ -19,13 +25,15 @@ export default function DleteMessageButton({ msgIndex, tableName }) {
             console.error(err)
         }
 
+        setDleteMessage(msgIndex)
+
     }
 
 
     return (
 
         <>
-            <button msgIndex={msgIndex} tableName={tableName} onClick={deleteMessage}>Canc</button>
+            <button className={msgUrename === username ? Style.trash_button : Style.trash_button_left} msgIndex={msgIndex} tableName={tableName} onClick={deleteMessage}><i className={`bi bi-trash-fill ${Style.trash_icon}`} ></i></button>
         </>
     )
 }

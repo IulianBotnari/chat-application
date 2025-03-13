@@ -291,6 +291,7 @@ body {
 
 
 .message_chatwindow {
+    display: flex;
     background-color: rgb(233, 227, 227);
     margin: 1rem 1rem;
     border-radius: 20px;

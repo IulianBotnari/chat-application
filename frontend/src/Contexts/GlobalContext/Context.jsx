@@ -7,6 +7,7 @@ const context = createContext()
 
 export function GlobalContext({ children }) {
     const [logged, setLogged] = useState()
+    const [deleteMessage, setDleteMessage] = useState(1)
 
     useEffect(() => {
         if (localStorage.getItem('token')) {
@@ -23,7 +24,9 @@ export function GlobalContext({ children }) {
 
     const values = {
         setLogged,
-        logged
+        logged,
+        setDleteMessage,
+        deleteMessage
     }
     return (
         <context.Provider value={values}>

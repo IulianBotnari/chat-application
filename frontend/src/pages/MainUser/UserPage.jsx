@@ -9,7 +9,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router'
 import data from '../../../node_modules/@emoji-mart/data'
 import Picker from '../../../node_modules/@emoji-mart/react'
-import DleteMessageButton from '../../../Components/DeleteMessageButton'
+import DeleteMessageButton from '../../../Components/DeleteMessageButton'
 
 // import '../../../node_modules/emoji-mart/css/emoji-mart.css'
 
@@ -17,7 +17,7 @@ import DleteMessageButton from '../../../Components/DeleteMessageButton'
 
 // Componente principale della pagina
 export default function MainPage() {
-    const { setLogged, logged } = useGlobalContext()
+    const { setLogged, logged, deleteMessage } = useGlobalContext()
     const navigate = useNavigate()
     const { username } = useParams()
     const [message, setMessage] = useState("")
@@ -33,8 +33,9 @@ export default function MainPage() {
     const [showPicker, setShowPicker] = useState(false)
     const messagesEndRef = useRef(null);
 
+    console.log(deleteMessage);
 
-    console.log(message);
+
 
     const handleEmpjiSelect = (emoji, e) => {
 
@@ -53,22 +54,12 @@ export default function MainPage() {
     }
 
 
-
-
-
-
-
-
     // Inizializza nameTable1 con lo username
     useEffect(() => {
         if (username) {
             setNameTable1(username.toLowerCase())
         }
     }, [username])
-
-
-
-
 
     // Connessione al socket quando l'utente è loggato e ha selezionato una chat
     useEffect(() => {
@@ -101,7 +92,6 @@ export default function MainPage() {
             messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
         }
     }, [messages])
-
 
     // Recupera i messaggi della chat selezionata
     useEffect(() => {
@@ -138,7 +128,6 @@ export default function MainPage() {
         getMessages()
     }, [tableName, chatList])
 
-
     // Invio di un nuovo messaggio
     const sendMessage = (e) => {
         e.preventDefault()
@@ -155,16 +144,12 @@ export default function MainPage() {
 
     }
 
-
-
-
     // Gestione del logout
     function handleLogOut() {
         localStorage.removeItem('token')
         setLogged(false)
         navigate('/login')
     }
-
 
     // Recupera la lista delle chat dell'utente
     useEffect(() => {
@@ -187,10 +172,11 @@ export default function MainPage() {
         }
 
         getChatList()
-    }, [username])
+    }, [username, deleteMessage])
 
 
     // Seleziona una chat dalla lista
+
     function selectChat(index) {
         setTableName(chatList[index].table_name)
 
@@ -201,7 +187,7 @@ export default function MainPage() {
 
 
     }
-
+    useEffect(() => { selectChat }, [deleteMessage])
 
     // Recupera la lista degli utenti per avviare nuove chat
     async function getUsers() {
@@ -236,10 +222,6 @@ export default function MainPage() {
         getUsers()
 
     }
-
-
-
-
 
     // Crea una nuova chat quando entrambi i nomi tabella sono presenti
     useEffect(() => {
@@ -350,8 +332,13 @@ export default function MainPage() {
                                         <h5 className={``}>{msg.username === username ? "io" : msg.username}</h5>
 
                                     </div>
-                                    <p className={`mb-0 p-2 ${style.message_chatwindow}`}>{msg.message}</p>
-                                    <DleteMessageButton msgIndex={msg.id} tableName={tableName} />
+
+
+
+                                    <p className={msg.username === username ? `mb-0 p-2 ${style.message_chatwindow}` : `mb-0 p-2 ${style.message_chatwindow} d-flex flex-row-reverse`}>{msg.message}          <DeleteMessageButton msgIndex={msg.id} msgUrename={msg.username} username={username} tableName={tableName} /></p>
+
+
+
                                 </div>
                             </div>
 

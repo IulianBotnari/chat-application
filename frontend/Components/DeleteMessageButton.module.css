@@ -1,0 +1,36 @@
+.trash_icon {
+
+    color: rgba(134, 5, 5, 0.678);
+
+}
+
+
+.trash_button {
+    border: none;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: transparent !important;
+    border-left: 1px solid rgba(172, 157, 157, 0.397);
+    padding: 5px;
+
+}
+
+.trash_button:hover {
+    background-color: rgba(172, 157, 157, 0.397) !important;
+}
+
+
+.trash_button_left {
+    border: none;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: transparent !important;
+    border-right: 1px solid rgba(172, 157, 157, 0.397);
+    padding: 5px;
+    padding-right: .5rem;
+
+}
+
+.trash_button_left:hover {
+    background-color: rgba(172, 157, 157, 0.397) !important;
+}
