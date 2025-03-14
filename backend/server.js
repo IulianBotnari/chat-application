@@ -12,9 +12,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const expressSession = require('express-session');
 const router = require("./Router/Router");
+const multer = require('multer')
+const path = require('path')
 
 // Configurazione delle variabili d'ambiente
 const connectdb = require('./db/DbConnection');
+const { isUtf8 } = require('buffer');
 const host = process.env.HOST;
 const port = process.env.PORT;
 const secret_key = process.env.SECRET_KEY;
@@ -127,6 +130,8 @@ app.use("/", router)
 
 
 
+
+
 // Endpoint per il recupero dei messaggi
 app.get('/messages', authenticateJWT, async (req, res) => {
     const { tablename } = req.query
@@ -141,6 +146,44 @@ app.get('/messages', authenticateJWT, async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+// gestione storage con multer
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './uploads')
+    },
+
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+})
+
+const upload = multer({ storage: storage })
+
+app.post("/post-file", upload.single('file'), (req, res) => {
+    const filePath = req.file.path;
+
+    const fs = require('fs')
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) return res.status(500).send('Errore nella lettura del file')
+
+        const messages = JSON.parse(data)
+
+        messages.forEach((message) => {
+            const { sender, content, timestamp } = message;
+            const query = 'INSERT INTO messages (sender, content, timestamp) VALUES (?, ?, ?)';
+            connection.query(query, [sender, content, timestamp], (err, results) => {
+                if (err) return res.status(500).send('Error inserting message into DB');
+            });
+        });
+
+        res.send('File uploaded and messages saved');
+    })
+})
+
+
+
 
 
 // Configurazione di Socket.IO per la comunicazione in tempo reale
@@ -159,6 +202,9 @@ io.on('connection', (socket) => {
 
     socket.on('chat message', async (data) => {
         const { username, message, tableName } = data;
+
+        console.log(message)
+
         try {
             await connectdb.query(`INSERT INTO \`${tableName}\` (username, message) VALUES (?, ?)`, [username, message]);
             io.to(tableName).emit('chat message', { username, message, timestamp: new Date(), tableName });

@@ -31,9 +31,10 @@ export default function MainPage() {
     const [isClicked, setIsClicked] = useState(false)
     const [search, setSearch] = useState("")
     const [showPicker, setShowPicker] = useState(false)
+    const [file, setFile] = useState(null)
     const messagesEndRef = useRef(null);
 
-    console.log(deleteMessage);
+    console.log(file);
 
 
 
@@ -129,9 +130,23 @@ export default function MainPage() {
     }, [tableName, chatList])
 
     // Invio di un nuovo messaggio
-    const sendMessage = (e) => {
+    const sendMessage = async (e) => {
         e.preventDefault()
-        if (message.trim() && username?.trim() && socket) {
+
+        if (file) {
+
+            const formData = new FormData();
+            formData.append('file', file)
+            try {
+                const response = await fetch(`http://localhost:3000/post-file`, {
+                    method: "post",
+                    body: formData
+                })
+            }
+            catch (err) {
+                console.error({ "Errore": err })
+            }
+        } else if (message.trim() && username?.trim() && socket) {
             socket.emit("chat message", { username, message, tableName })
             setMessage("")
         }
@@ -353,7 +368,7 @@ export default function MainPage() {
                     <div className={style.send_message_div}>
                         <form className='d-flex' onSubmit={sendMessage}>
                             <label htmlFor="file_input" className={`${style.input_icon}`}><i className="bi bi-file-plus-fill"></i></label>
-                            <input className="d-none" id='file_input' type="file" />
+                            <input className="d-none" id='file_input' type="file" onChange={(e) => setFile(e.target.files[0])} />
 
 
 
