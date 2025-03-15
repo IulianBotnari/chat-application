@@ -138,6 +138,8 @@ export default function MainPage() {
         e.preventDefault()
 
         if (file) {
+            console.log(file);
+
 
             const formData = new FormData();
             formData.append('file', file)
@@ -152,6 +154,15 @@ export default function MainPage() {
             catch (err) {
                 console.error({ "Errore": err })
             }
+
+            setMessage(file.LastModified + ".pdf")
+
+            if (message.trim() && username?.trim() && socket) {
+                socket.emit("chat message", { username, message, tableName })
+                setMessage("")
+            }
+
+            setFile(null)
         } else if (message.trim() && username?.trim() && socket) {
             socket.emit("chat message", { username, message, tableName })
             setMessage("")
@@ -372,7 +383,7 @@ export default function MainPage() {
 
                     {/* Form per inviare nuovi messaggi */}
                     <div className={style.send_message_div}>
-                        <form className='d-flex' onSubmit={sendMessage} enctype="multipart/form-data">
+                        <form className='d-flex' onSubmit={sendMessage} encType="multipart/form-data">
                             <label htmlFor="file_input" className={`${style.input_icon}`}><i className="bi bi-file-plus-fill"></i></label>
                             <input className="d-none" id='file_input' type="file" onChange={(e) => setFile(e.target.files[0])} />
 
