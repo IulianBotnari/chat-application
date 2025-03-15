@@ -35,6 +35,10 @@ export default function MainPage() {
     const messagesEndRef = useRef(null);
 
     console.log(file);
+    const formData = new FormData()
+    formData.append('file', file)
+    console.log(formData.get('file'));
+
 
 
 
@@ -137,6 +141,8 @@ export default function MainPage() {
 
             const formData = new FormData();
             formData.append('file', file)
+            console.log(formData);
+
             try {
                 const response = await fetch(`http://localhost:3000/post-file`, {
                     method: "post",
@@ -366,7 +372,7 @@ export default function MainPage() {
 
                     {/* Form per inviare nuovi messaggi */}
                     <div className={style.send_message_div}>
-                        <form className='d-flex' onSubmit={sendMessage}>
+                        <form className='d-flex' onSubmit={sendMessage} enctype="multipart/form-data">
                             <label htmlFor="file_input" className={`${style.input_icon}`}><i className="bi bi-file-plus-fill"></i></label>
                             <input className="d-none" id='file_input' type="file" onChange={(e) => setFile(e.target.files[0])} />
 
