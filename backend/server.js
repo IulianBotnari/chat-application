@@ -234,10 +234,13 @@ io.on('connection', (socket) => {
         })
     })
 
+
+    // il problema e passare il path al database, da capire come visualizzare il file nella chat
+
     socket.on('chat message', async (data) => {
         const { username, message, tableName } = data;
 
-        console.log(message)
+        // console.log(message)
 
         try {
             await connectdb.query(`INSERT INTO \`${tableName}\` (username, message) VALUES (?, ?)`, [username, message]);
