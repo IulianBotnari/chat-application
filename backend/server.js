@@ -161,32 +161,32 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-// app.post("/post-file", upload.single('file'), (req, res) => {
+app.post("/post-file", upload.single('file'), (req, res) => {
 
 
-//     const filePath = req.file.path
+    const filePath = req.file.path
+    console.log(req.file);
 
-//     console.log(filePath);
+
+    console.log(filePath);
 
 
-//     const fs = require('fs')
-//     fs.readFile(filePath, 'utf8', (err, data) => {
-//         if (err) return res.status(500).send('Errore nella lettura del file')
-//         console.log(data);
+    const fs = require('fs')
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) return res.status(500).send('Errore nella lettura del file')
+        console.log(data);
 
-// const messages = JSON.parse(data)
+        const messages = {
+            sender: 'Server',
+            content: data,
+            timestamp: Date.now()
+        }
 
-// messages.forEach((message) => {
-//     const { sender, content, timestamp } = message;
-//     const query = 'INSERT INTO messages (sender, content, timestamp) VALUES (?, ?, ?)';
-//     connection.query(query, [sender, content, timestamp], (err, results) => {
-//         if (err) return res.status(500).send('Error inserting message into DB');
-//     });
-// });
+        console.log(messages.data);
 
-//         // res.send('File uploaded and messages saved');
-//     })
-// })
+        res.send('File uploaded and messages saved');
+    })
+})
 
 
 
@@ -206,33 +206,6 @@ io.on('connection', (socket) => {
         console.log(`Utente uscito dalla stanza ${room}`);
     });
 
-
-    app.post("/post-file", upload.single('file'), (req, res) => {
-
-
-        const filePath = req.file.path
-
-        console.log(filePath);
-
-
-        const fs = require('fs')
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            if (err) return res.status(500).send('Errore nella lettura del file')
-            // console.log(data);
-
-            // const messages = JSON.parse(data)
-
-            // messages.forEach((message) => {
-            //     const { sender, content, timestamp } = message;
-            //     const query = 'INSERT INTO messages (sender, content, timestamp) VALUES (?, ?, ?)';
-            //     connection.query(query, [sender, content, timestamp], (err, results) => {
-            //         if (err) return res.status(500).send('Error inserting message into DB');
-            //     });
-            // });
-
-            // res.send('File uploaded and messages saved');
-        })
-    })
 
 
     // il problema e passare il path al database, da capire come visualizzare il file nella chat

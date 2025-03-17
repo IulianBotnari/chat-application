@@ -34,13 +34,6 @@ export default function MainPage() {
     const [file, setFile] = useState(null)
     const messagesEndRef = useRef(null);
 
-    console.log(file);
-    const formData = new FormData()
-    formData.append('file', file)
-    console.log(formData.get('file'));
-
-
-
 
     const handleEmpjiSelect = (emoji, e) => {
 
@@ -138,32 +131,46 @@ export default function MainPage() {
         e.preventDefault()
 
         if (file) {
-            console.log(file);
-
 
             const formData = new FormData();
             formData.append('file', file)
-            console.log(formData);
+
 
             try {
                 const response = await fetch(`http://localhost:3000/post-file`, {
-                    method: "post",
+                    method: "POST",
                     body: formData
-                })
+                }
+
+                )
+                if (!response.ok) {
+                    throw new Error("Errore nel invio del file")
+                }
+                const data = response.clone()
+                console.log(data);
+                console.log("File inviato con successo:", data.url)
+
+                setMessage(data.url)
+                console.log(message);
+
+
             }
             catch (err) {
-                console.error({ "Errore": err })
+                err
             }
 
-            setMessage(file.LastModified + ".pdf")
 
-            if (message.trim() && username?.trim() && socket) {
+
+
+
+
+            if (message && username?.trim() && socket) {
                 socket.emit("chat message", { username, message, tableName })
                 setMessage("")
             }
 
             setFile(null)
-        } else if (message.trim() && username?.trim() && socket) {
+        } else if (message && username?.trim() && socket) {
             socket.emit("chat message", { username, message, tableName })
             setMessage("")
         }
