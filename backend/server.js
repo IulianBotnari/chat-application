@@ -14,6 +14,7 @@ const expressSession = require('express-session');
 const router = require("./Router/Router");
 const multer = require('multer')
 const path = require('path')
+const fs = require('fs');
 
 // Configurazione delle variabili d'ambiente
 const connectdb = require('./db/DbConnection');
@@ -162,32 +163,28 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 app.post("/post-file", upload.single('file'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: "Nessun file caricato" });
+    }
 
+    const filePath = req.file.path;
+    console.log("File ricevuto:", req.file);
 
-    const filePath = req.file.path
-    console.log(req.file);
-
-
-    console.log(filePath);
-
-
-    const fs = require('fs')
     fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) return res.status(500).send('Errore nella lettura del file')
-        console.log(data);
+        if (err) {
+            return res.status(500).json({ error: "Errore nella lettura del file" });
+        }
 
         const messages = {
             sender: 'Server',
             content: data,
             timestamp: Date.now()
-        }
+        };
 
-        console.log(messages.data);
-
-        res.send('File uploaded and messages saved');
-    })
-})
-
+        console.log("Messaggio inviato:", messages);
+        res.json({ filePath }); // CORRETTO: restituisce l'oggetto completo
+    });
+});
 
 
 
