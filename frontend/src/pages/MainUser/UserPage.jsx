@@ -72,6 +72,7 @@ export default function MainPage() {
 
         newSocket.on("chat message", (msg) => {
             if (msg.tableName !== tableName) return;
+
             setMessages(prevMessages => ({
                 ...prevMessages,
                 data: [...prevMessages.data, msg]
@@ -297,6 +298,13 @@ export default function MainPage() {
     };
 
 
+    function checkTypeMessage(mes) {
+        const typeFile = [".jpg", ".pdf", ".log"]
+        return typeFile.some(ext => mes.endsWith(ext));
+
+    }
+
+
 
     return (
         <>
@@ -372,8 +380,13 @@ export default function MainPage() {
                                     </div>
 
 
+                                    {checkTypeMessage(msg.message) ?
+                                        <iframe src={`../../../../backend/uploads/1742226565619.pdf`} className={msg.username === username ? `mb-0 p-2 ${style.message_chatwindow}` : `mb-0 p-2 ${style.message_chatwindow} d-flex flex-row-reverse`}>
+                                            <DeleteMessageButton msgIndex={msg.id} msgUrename={msg.username} username={username} tableName={tableName} />
+                                        </iframe>
+                                        :
+                                        <p className={msg.username === username ? `mb-0 p-2 ${style.message_chatwindow}` : `mb-0 p-2 ${style.message_chatwindow} d-flex flex-row-reverse`}>{msg.message} <DeleteMessageButton msgIndex={msg.id} msgUrename={msg.username} username={username} tableName={tableName} /></p>}
 
-                                    <p className={msg.username === username ? `mb-0 p-2 ${style.message_chatwindow}` : `mb-0 p-2 ${style.message_chatwindow} d-flex flex-row-reverse`}>{msg.message}          <DeleteMessageButton msgIndex={msg.id} msgUrename={msg.username} username={username} tableName={tableName} /></p>
 
 
 
