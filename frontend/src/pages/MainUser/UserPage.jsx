@@ -151,9 +151,9 @@ export default function MainPage() {
                 const data = await response.json()
                 console.log(data.filePath);
 
-                console.log(data);
+                console.log(data.messages.content);
                 console.log("File inviato con successo:", data.url)
-                setMessage(data.filePath)
+                setMessage(data.messages.content)
 
                 console.log(message);
             } catch (error) {
@@ -305,6 +305,26 @@ export default function MainPage() {
     }
 
 
+    function getFile(params) {
+
+        fetch(`http://localhost:3001/getfile?file=${params}`)
+            .then((response) => response.json())
+            .then((data) => {
+                // setLogs(data.content); // Mostra solo il contenuto del log
+
+                console.log(data.content);
+
+
+                return data.content
+            })
+            .catch((error) => console.error("Errore nel recupero dei log:", error));
+    }
+
+    useEffect(() => {
+        getFile
+    }, []);
+
+
 
     return (
         <>
@@ -381,9 +401,9 @@ export default function MainPage() {
 
 
                                     {checkTypeMessage(msg.message) ?
-                                        <iframe src={`../../../../backend/uploads/1742226565619.pdf`} className={msg.username === username ? `mb-0 p-2 ${style.message_chatwindow}` : `mb-0 p-2 ${style.message_chatwindow} d-flex flex-row-reverse`}>
-                                            <DeleteMessageButton msgIndex={msg.id} msgUrename={msg.username} username={username} tableName={tableName} />
-                                        </iframe>
+                                        <a className={msg.username === username ? `mb-0 p-2 ${style.message_chatwindow}` : `mb-0 p-2 ${style.message_chatwindow} d-flex flex-row-reverse`}>
+                                            {`http://localhost:3000/getfile?file=${msg.message}`} <DeleteMessageButton msgIndex={msg.id} msgUrename={msg.username} username={username} tableName={tableName} />
+                                        </a>
                                         :
                                         <p className={msg.username === username ? `mb-0 p-2 ${style.message_chatwindow}` : `mb-0 p-2 ${style.message_chatwindow} d-flex flex-row-reverse`}>{msg.message} <DeleteMessageButton msgIndex={msg.id} msgUrename={msg.username} username={username} tableName={tableName} /></p>}
 

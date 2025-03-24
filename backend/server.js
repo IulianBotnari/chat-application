@@ -182,7 +182,8 @@ app.post("/post-file", upload.single('file'), (req, res) => {
         };
 
         console.log("Messaggio inviato:", messages);
-        res.json({ filePath }); // CORRETTO: restituisce l'oggetto completo
+        // res.json({ filePath }); // CORRETTO: restituisce l'oggetto completo
+        res.json({ messages }); // CORRETTO: restituisce l'oggetto completo
     });
 });
 
