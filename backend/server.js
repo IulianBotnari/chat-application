@@ -162,29 +162,70 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-app.post("/post-file", upload.single('file'), (req, res) => {
+// app.post("/post-file", upload.single('file'), (req, res) => {
+//     if (!req.file) {
+//         return res.status(400).json({ error: "Nessun file caricato" });
+//     }
+
+//     const filePath = req.file.path;
+//     console.log("File ricevuto:", req.file);
+
+//     fs.readFile(filePath, 'utf8', (err, data) => {
+//         if (err) {
+//             return res.status(500).json({ error: "Errore nella lettura del file" });
+//         }
+
+//         const messages = {
+//             sender: 'Server',
+//             content: data,
+//             timestamp: Date.now()
+//         };
+
+//         // console.log("Messaggio inviato:", messages);
+//         // res.json({ filePath }); // CORRETTO: restituisce l'oggetto completo
+//         res.json({ messages }); // CORRETTO: restituisce l'oggetto completo
+//     });
+// });
+
+app.post("/post-file", upload.single("file"), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: "Nessun file caricato" });
     }
 
-    const filePath = req.file.path;
-    console.log("File ricevuto:", req.file);
+    const filePath = `/uploads/${req.file.filename}`; // Percorso del file
+    const fullFilePath = path.join(__dirname, filePath); // Percorso assoluto
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            return res.status(500).json({ error: "Errore nella lettura del file" });
-        }
+    // Determina se il file è leggibile come testo
+    const textExtensions = [".txt", ".log", ".json"];
+    const fileExt = path.extname(req.file.originalname).toLowerCase();
 
-        const messages = {
-            sender: 'Server',
-            content: data,
-            timestamp: Date.now()
-        };
+    if (textExtensions.includes(fileExt)) {
+        // Se è un file di testo, leggiamo il contenuto
+        fs.readFile(fullFilePath, "utf8", (err, data) => {
+            if (err) {
+                return res.status(500).json({ error: "Errore nella lettura del file" });
+            }
 
-        // console.log("Messaggio inviato:", messages);
-        // res.json({ filePath }); // CORRETTO: restituisce l'oggetto completo
-        res.json({ messages }); // CORRETTO: restituisce l'oggetto completo
-    });
+            res.json({
+                filePath, // URL del file
+                messages: {
+                    sender: "Server",
+                    content: data, // Contenuto del file
+                    timestamp: Date.now()
+                }
+            });
+        });
+    } else {
+        // Per file binari (immagini, PDF, ecc.), restituisci solo l'URL
+        res.json({
+            filePath, // URL del file
+            messages: {
+                sender: "Server",
+                content: filePath, // Invia solo il percorso
+                timestamp: Date.now()
+            }
+        });
+    }
 });
 
 

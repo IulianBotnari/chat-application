@@ -152,7 +152,7 @@ export default function MainPage() {
 
                 const data = await response.json()
                 if (data.messages?.content) {
-                    setMessage(data.messages.content);
+                    setMessage(data.filePath.substring(1));
                     console.log(data);
 
                     setTimeout(() => {
@@ -405,16 +405,38 @@ export default function MainPage() {
 
                                     </div>
 
+                                    {checkTypeMessage(msg.message) === true ? (
+                                        <>
 
-                                    {checkTypeMessage(msg.message) ?
-                                        <a className={msg.username === username ? `mb-0 p-2 ${style.message_chatwindow}` : `mb-0 p-2 ${style.message_chatwindow} d-flex flex-row-reverse`}>
-                                            {`http://localhost:3000/getfile?file=${msg.message}`} <DeleteMessageButton msgIndex={msg.id} msgUrename={msg.username} username={username} tableName={tableName} />
-                                        </a>
-                                        :
-                                        <p className={msg.username === username ? `mb-0 p-2 ${style.message_chatwindow}` : `mb-0 p-2 ${style.message_chatwindow} d-flex flex-row-reverse`}>{msg.message} <DeleteMessageButton msgIndex={msg.id} msgUrename={msg.username} username={username} tableName={tableName} /></p>}
+                                            <img
+                                                src={`http://localhost:3000/getfile?file=${msg.message}`}
+                                                alt="Immagine"
+                                                className={msg.username === username ? `mb-0 p-2 ${style.message_chatwindow}` : `mb-0 p-2 ${style.message_chatwindow}`}
+                                                style={{ maxWidth: "300px", borderRadius: "8px" }}
+                                            />
+
+                                            <DeleteMessageButton
+                                                msgIndex={msg.id}
+                                                msgUrename={msg.username}
+                                                username={username}
+                                                tableName={tableName}
+                                            />
 
 
+                                        </>
 
+
+                                    ) : (
+                                        <p className={msg.username === username ? `mb-0 p-2 ${style.message_chatwindow}` : `mb-0 p-2 ${style.message_chatwindow} d-flex flex-row-reverse`}>
+                                            {msg.message}
+                                            <DeleteMessageButton
+                                                msgIndex={msg.id}
+                                                msgUrename={msg.username}
+                                                username={username}
+                                                tableName={tableName}
+                                            />
+                                        </p>
+                                    )}
 
                                 </div>
                             </div>
