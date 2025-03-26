@@ -181,7 +181,7 @@ app.post("/post-file", upload.single('file'), (req, res) => {
             timestamp: Date.now()
         };
 
-        console.log("Messaggio inviato:", messages);
+        // console.log("Messaggio inviato:", messages);
         // res.json({ filePath }); // CORRETTO: restituisce l'oggetto completo
         res.json({ messages }); // CORRETTO: restituisce l'oggetto completo
     });

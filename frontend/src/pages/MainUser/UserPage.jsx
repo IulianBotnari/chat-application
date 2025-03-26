@@ -33,6 +33,8 @@ export default function MainPage() {
     const [showPicker, setShowPicker] = useState(false)
     const [file, setFile] = useState(null)
     const messagesEndRef = useRef(null);
+    console.log(message);
+
 
 
     const handleEmpjiSelect = (emoji, e) => {
@@ -138,36 +140,40 @@ export default function MainPage() {
 
             try {
 
-                const response = await fetch(`http://localhost:3000/post-file`, {
+                const response = await fetch("http://localhost:3000/post-file", {
                     method: "POST",
                     body: formData
-                }
+                });
 
-                )
+
                 if (!response.ok) {
                     throw new Error("Errore nel invio del file")
                 }
 
                 const data = await response.json()
-                console.log(data.filePath);
+                if (data.messages?.content) {
+                    setMessage(data.messages.content);
+                    console.log(data);
 
-                console.log(data.messages.content);
-                console.log("File inviato con successo:", data.url)
-                setMessage(data.messages.content)
+                    setTimeout(() => {
+                        if (username?.trim() && socket) {
+                            socket.emit("chat message", { username, message, tableName });
 
-                console.log(message);
+                            setMessage("");
+                            setFile(null);
+                        }
+                    }, 1000);
+                } else {
+                    throw new Error("Risposta del server non valida");
+                }
+
+
+                console.log("File inviato con successo:", data.url);
+
+                // Aspetta che lo stato si aggiorni prima di usare `message`
+
             } catch (error) {
                 console.error("Errore:", error);
-            } finally {
-
-
-                console.log(message);
-
-                if (message && username?.trim() && socket) {
-                    socket.emit("chat message", { username, message, tableName })
-                    setMessage("")
-                    setFile(null)
-                }
             }
 
         } else if (message && username?.trim() && socket) {
